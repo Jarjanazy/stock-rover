@@ -16,6 +16,6 @@ public class CrawlerServiceLiveTest
     @Test
     public void givenTheAppleStockPageOnMacroTrends_ThenGetIt() throws IOException
     {
-        crawlerService.getGivenPageUsingURL("https://www.macrotrends.net/stocks/charts/AAPL/apple/cash-flow-statement");
+        crawlerService.getGivenPageUsingURL("https://www.macrotrends.net/stocks/charts/MSFT/microsoft/gross-margin");
     }
 }

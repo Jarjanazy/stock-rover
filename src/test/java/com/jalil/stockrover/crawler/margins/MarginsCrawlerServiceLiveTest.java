@@ -1,21 +1,19 @@
-package com.jalil.stockrover.crawler;
+package com.jalil.stockrover.crawler.margins;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.io.IOException;
 
 @SpringBootTest
-public class CrawlerServiceLiveTest
+public class MarginsCrawlerServiceLiveTest
 {
     @Autowired
-    private CrawlerService crawlerService;
+    private MarginsCrawlerService marginsCrawlerService;
 
     @Test
     public void givenTheAppleStockPageOnMacroTrends_ThenGetIt() throws IOException
     {
-        crawlerService.getGivenPageUsingURL("https://www.macrotrends.net/stocks/charts/MSFT/microsoft/gross-margin");
+        marginsCrawlerService.crawlGrossMargin("MSFT", "microsoft");
     }
 }

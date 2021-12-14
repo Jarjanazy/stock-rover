@@ -4,6 +4,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.domain.grossmargin.GrossMargin;
 import com.jalil.stockrover.domain.grossmargin.IGrossMarginRepo;
+import com.jalil.stockrover.domain.netmargin.INetMarginRepo;
+import com.jalil.stockrover.domain.netmargin.NetMargin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,20 +33,26 @@ public class MarginsCrawlerServiceTest
     @Mock
     IGrossMarginRepo grossMarginRepo;
 
+    @Mock
+    INetMarginRepo netMarginRepo;
+
     @Captor
     ArgumentCaptor<List<GrossMargin>> grossMarginCaptor;
+
+    @Captor
+    ArgumentCaptor<List<NetMargin>> netMarginCaptor;
 
     @BeforeEach
     public void setup()
     {
-        marginsCrawlerService = new MarginsCrawlerService(grossMarginRepo, htmlPageFetcher);
+        marginsCrawlerService = new MarginsCrawlerService(grossMarginRepo, netMarginRepo, htmlPageFetcher);
     }
 
 
     @Test
     public void givenAGrossMarginsPage_WhenItHas1Row_ThenConvertItToGrossMargin() throws IOException
     {
-        URL input = getClass().getResource("/testPage.html").openConnection().getURL();
+        URL input = getClass().getResource("/grossMarginTestPage.html").openConnection().getURL();
         HtmlPage htmlPage = createWebClient().getPage(input);
 
         when(htmlPageFetcher.getGrossMarginsHtmlPage("AAPL", "Apple")).thenReturn(htmlPage);
@@ -65,7 +73,32 @@ public class MarginsCrawlerServiceTest
         assertThat(date.getDayOfMonth()).isEqualTo(2);
         assertThat(date.getMonthValue()).isEqualTo(1);
         assertThat(date.getYear()).isEqualTo(2021);
+    }
 
+    @Test
+    public void givenANetMarginsPage_WhenItHas2Rows_ThenConvertItToGrossMargin() throws IOException
+    {
+        URL input = getClass().getResource("/netMarginTestPage.html").openConnection().getURL();
+        HtmlPage htmlPage = createWebClient().getPage(input);
+
+        when(htmlPageFetcher.getNetMarginsHtmlPage("AAPL", "Apple")).thenReturn(htmlPage);
+
+        when(netMarginRepo.saveAll(netMarginCaptor.capture())).thenReturn(null);
+
+        marginsCrawlerService.crawlNetMargin("AAPL", "Apple");
+
+        List<NetMargin> captured = netMarginCaptor.getValue();
+
+        assertThat(captured).hasSize(2);
+
+        assertThat(captured.get(1).getNetMarginPercentage()).isEqualTo(69.86);
+        assertThat(captured.get(1).getTtmNetIncome()).isEqualTo(122.38);
+        assertThat(captured.get(1).getTtmRevenue()).isEqualTo(174.25);
+
+        LocalDateTime date = captured.get(1).getDate();
+        assertThat(date.getDayOfMonth()).isEqualTo(2);
+        assertThat(date.getMonthValue()).isEqualTo(1);
+        assertThat(date.getYear()).isEqualTo(2022);
 
     }
 

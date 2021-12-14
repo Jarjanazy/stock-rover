@@ -8,6 +8,8 @@ import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.RowToEntityConvertor;
 import com.jalil.stockrover.domain.grossmargin.GrossMargin;
 import com.jalil.stockrover.domain.grossmargin.IGrossMarginRepo;
+import com.jalil.stockrover.domain.netmargin.INetMarginRepo;
+import com.jalil.stockrover.domain.netmargin.NetMargin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,14 +17,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.jalil.stockrover.crawler.RowToEntityConvertor.rowToGrossMargin;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class MarginsCrawlerService
 {
     private final IGrossMarginRepo grossMarginRepo;
+
+    private final INetMarginRepo netMarginRepo;
 
     private final HtmlPageFetcher htmlPageFetcher;
 
@@ -38,6 +40,19 @@ public class MarginsCrawlerService
 
         grossMarginRepo.saveAll(grossMargins);
 
+    }
+
+    public void crawlNetMargin(String stockSymbol, String companyName) throws IOException
+    {
+        HtmlPage page = htmlPageFetcher.getNetMarginsHtmlPage(stockSymbol, companyName);
+
+        DomElement domElement = getFirstTableWithGivenId(page, "style-1");
+
+        DomNodeList<HtmlElement> rows = domElement.getElementsByTagName("tr");
+
+        List<NetMargin> netMargins = htmlTableRowsToNetMargins(rows);
+
+        netMarginRepo.saveAll(netMargins);
     }
 
 
@@ -56,7 +71,15 @@ public class MarginsCrawlerService
                 .map(row -> row.getElementsByTagName("td"))
                 .map(RowToEntityConvertor::rowToGrossMargin)
                 .collect(Collectors.toList());
+    }
 
+    private List<NetMargin> htmlTableRowsToNetMargins(DomNodeList<HtmlElement> rows)
+    {
+        return rows
+                .stream()
+                .map(row -> row.getElementsByTagName("td"))
+                .map(RowToEntityConvertor::rowToNetMargin)
+                .collect(Collectors.toList());
     }
 
 }

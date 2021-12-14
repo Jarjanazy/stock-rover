@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 import static com.jalil.stockrover.crawler.UrlFactory.getGrossMarginUrl;
+import static com.jalil.stockrover.crawler.UrlFactory.getNetMarginUrl;
 import static com.jalil.stockrover.crawler.WebClientFactory.createWebClient;
 
 @Service
@@ -15,5 +16,11 @@ public class HtmlPageFetcher
     {
         return createWebClient()
                 .getPage(getGrossMarginUrl(stockSymbol, companyName));
+    }
+
+    public HtmlPage getNetMarginsHtmlPage(String stockSymbol, String companyName) throws IOException
+    {
+        return createWebClient()
+                .getPage(getNetMarginUrl(stockSymbol, companyName));
     }
 }

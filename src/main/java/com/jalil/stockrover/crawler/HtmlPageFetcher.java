@@ -1,13 +1,14 @@
 package com.jalil.stockrover.crawler;
 
+import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static com.jalil.stockrover.crawler.UrlFactory.getGrossMarginUrl;
-import static com.jalil.stockrover.crawler.UrlFactory.getNetMarginUrl;
+import static com.jalil.stockrover.crawler.UrlFactory.*;
 import static com.jalil.stockrover.crawler.WebClientFactory.createWebClient;
+import static com.jalil.stockrover.crawler.WebClientFactory.createWebClientForTableRetrieval;
 
 @Service
 public class HtmlPageFetcher
@@ -23,4 +24,11 @@ public class HtmlPageFetcher
         return createWebClient()
                 .getPage(getNetMarginUrl(stockSymbol, companyName));
     }
+
+    public HtmlPage getIncomeStatementHtmlPage(String stockSymbol, String companyName) throws IOException
+    {
+        return createWebClientForTableRetrieval()
+                .getPage(getIncomeStatementUrl(stockSymbol, companyName));
+    }
+
 }

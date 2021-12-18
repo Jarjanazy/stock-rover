@@ -6,6 +6,11 @@ public class UrlFactory
 {
     private static final String baseUrl = "https://www.macrotrends.net/stocks/charts";
 
+    public static String getIncomeStatementUrl(String stockSymbol, String companyName)
+    {
+        return format("%s/%s/%s/income-statement?freq=Q", baseUrl, stockSymbol, companyName);
+    }
+
     public static String getGrossMarginUrl(String stockSymbol, String companyName)
     {
         return format("%s/%s/%s/gross-margin", baseUrl, stockSymbol, companyName);

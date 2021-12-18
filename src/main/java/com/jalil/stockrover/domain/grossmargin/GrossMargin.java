@@ -1,5 +1,6 @@
 package com.jalil.stockrover.domain.grossmargin;
 
+import com.jalil.stockrover.domain.company.Company;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,4 +32,8 @@ public class GrossMargin
 
     @Column(name="gross_margin_percentage")
     private double grossMarginPercentage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 }

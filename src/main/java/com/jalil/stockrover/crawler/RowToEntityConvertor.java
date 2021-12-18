@@ -3,6 +3,7 @@ package com.jalil.stockrover.crawler;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.Html;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.grossmargin.GrossMargin;
 import com.jalil.stockrover.domain.netmargin.NetMargin;
 
@@ -13,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class RowToEntityConvertor
 {
 
-    public static GrossMargin rowToGrossMargin(DomNodeList<HtmlElement> row)
+    public static GrossMargin rowToGrossMargin(DomNodeList<HtmlElement> row, Company company)
     {
         LocalDate dateTime = getDateFromRow(row);
 
@@ -26,10 +27,12 @@ public class RowToEntityConvertor
                 .date(dateTime.atStartOfDay())
                 .ttmRevenue(ttmRevenue)
                 .ttmGrossProfit(ttmGrossProfit)
-                .grossMarginPercentage(grossMargin).build();
+                .grossMarginPercentage(grossMargin)
+                .company(company)
+                .build();
     }
 
-    public static NetMargin rowToNetMargin(DomNodeList<HtmlElement> row)
+    public static NetMargin rowToNetMargin(DomNodeList<HtmlElement> row, Company company)
     {
         LocalDate dateTime = getDateFromRow(row);
 
@@ -43,6 +46,7 @@ public class RowToEntityConvertor
                 .ttmRevenue(ttmRevenue)
                 .ttmNetIncome(ttmNetIncome)
                 .netMarginPercentage(netMargin)
+                .company(company)
                 .build();
     }
 

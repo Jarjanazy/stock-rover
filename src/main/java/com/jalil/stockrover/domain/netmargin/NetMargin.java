@@ -1,5 +1,6 @@
 package com.jalil.stockrover.domain.netmargin;
 
+import com.jalil.stockrover.domain.company.Company;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,5 +32,9 @@ public class NetMargin
 
     @Column(name="net_margin_percentage")
     private double netMarginPercentage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 }

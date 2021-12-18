@@ -2,6 +2,7 @@ package com.jalil.stockrover.crawler.margins;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
+import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.grossmargin.GrossMargin;
 import com.jalil.stockrover.domain.grossmargin.IGrossMarginRepo;
 import com.jalil.stockrover.domain.netmargin.INetMarginRepo;
@@ -59,7 +60,9 @@ public class MarginsCrawlerServiceTest
 
         when(grossMarginRepo.saveAll(grossMarginCaptor.capture())).thenReturn(null);
 
-        marginsCrawlerService.crawlGrossMargin("AAPL", "Apple");
+        Company company = Company.builder().companySymbol("AAPL").companyName("Apple").build();
+
+        marginsCrawlerService.crawlGrossMargin(company);
 
         List<GrossMargin> captured = grossMarginCaptor.getValue();
 
@@ -68,6 +71,7 @@ public class MarginsCrawlerServiceTest
         assertThat(captured.get(0).getGrossMarginPercentage()).isEqualTo(68.86);
         assertThat(captured.get(0).getTtmGrossProfit()).isEqualTo(121.38);
         assertThat(captured.get(0).getTtmRevenue()).isEqualTo(176.25);
+        assertThat(captured.get(0).getCompany()).isEqualTo(company);
 
         LocalDateTime date = captured.get(0).getDate();
         assertThat(date.getDayOfMonth()).isEqualTo(2);
@@ -76,7 +80,7 @@ public class MarginsCrawlerServiceTest
     }
 
     @Test
-    public void givenANetMarginsPage_WhenItHas2Rows_ThenConvertItToGrossMargin() throws IOException
+    public void givenANetMarginsPage_WhenItHas2Rows_ThenConvertItToNetMargin() throws IOException
     {
         URL input = getClass().getResource("/netMarginTestPage.html").openConnection().getURL();
         HtmlPage htmlPage = createWebClient().getPage(input);
@@ -85,7 +89,9 @@ public class MarginsCrawlerServiceTest
 
         when(netMarginRepo.saveAll(netMarginCaptor.capture())).thenReturn(null);
 
-        marginsCrawlerService.crawlNetMargin("AAPL", "Apple");
+        Company company = Company.builder().companyName("Apple").companySymbol("AAPL").build();
+
+        marginsCrawlerService.crawlNetMargin(company);
 
         List<NetMargin> captured = netMarginCaptor.getValue();
 
@@ -94,6 +100,7 @@ public class MarginsCrawlerServiceTest
         assertThat(captured.get(1).getNetMarginPercentage()).isEqualTo(69.86);
         assertThat(captured.get(1).getTtmNetIncome()).isEqualTo(122.38);
         assertThat(captured.get(1).getTtmRevenue()).isEqualTo(174.25);
+        assertThat(captured.get(1).getCompany()).isNotNull();
 
         LocalDateTime date = captured.get(1).getDate();
         assertThat(date.getDayOfMonth()).isEqualTo(2);

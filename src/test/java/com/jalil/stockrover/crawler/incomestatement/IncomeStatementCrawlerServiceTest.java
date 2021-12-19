@@ -16,13 +16,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
-
-import static com.jalil.stockrover.crawler.WebClientFactory.createWebClient;
 import static com.jalil.stockrover.crawler.WebClientFactory.createWebClientForTableRetrieval;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -63,8 +60,11 @@ public class IncomeStatementCrawlerServiceTest
         List<IncomeStatement> captured = argumentCaptor.getValue();
 
         assertThat(captured).hasSize(67);
-
+        IncomeStatement incomeStatement = captured.get(0);
+        assertThat(incomeStatement.getDate()).isBefore(LocalDateTime.now());
+        assertThat(incomeStatement.getRevenue()).isEqualTo(83360);
+        assertThat(incomeStatement.getCostOfGoodsSold()).isEqualTo(48186);
+        assertThat(incomeStatement.getGrossProfit()).isEqualTo(35174);
+        assertThat(incomeStatement.getCompany()).isEqualTo(company);
     }
-
-
 }

@@ -9,12 +9,9 @@ import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import static java.lang.Double.parseDouble;
 
 public class MapToEntityConvertor
@@ -25,11 +22,11 @@ public class MapToEntityConvertor
 
         return dates
             .stream()
-            .map(date -> createIncomeStatementFromDateAndData(date, dataList))
+            .map(date -> createIncomeStatementFromDateAndData(date, dataList, company))
             .collect(Collectors.toList());
     }
 
-    private static IncomeStatement createIncomeStatementFromDateAndData(String date, List<LinkedTreeMap<String, String>> dataList)
+    private static IncomeStatement createIncomeStatementFromDateAndData(String date, List<LinkedTreeMap<String, String>> dataList, Company company)
     {
         return IncomeStatement
                 .builder()
@@ -53,6 +50,7 @@ public class MapToEntityConvertor
                 .basicEps(parseDouble(dataList.get(20).get(date)))
                 .eps(parseDouble(dataList.get(21).get(date)))
                 .date(getDateString(date))
+                .company(company)
                 .build();
     }
 

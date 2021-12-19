@@ -37,6 +37,8 @@ public class CrawlerServiceLiveTest
     @Test
     public void givenTheAppleStockPageOnMacroTrends_WhenIncomeStatementIsRequested_ThenGetIt() throws IOException, InterruptedException
     {
-        incomeStatementCrawlerService.crawlIncomeStatement("AAPL", "apple");
+        Company company = Company.builder().companyName("apple").companySymbol("AAPL").build();
+
+        incomeStatementCrawlerService.crawlIncomeStatement(company);
     }
 }

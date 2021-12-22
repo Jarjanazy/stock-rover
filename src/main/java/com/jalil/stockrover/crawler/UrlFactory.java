@@ -11,6 +11,11 @@ public class UrlFactory
         return format("%s/%s/%s/income-statement?freq=Q", baseUrl, stockSymbol, companyName);
     }
 
+    public static String getBalanceSheetUrl(String stockSymbol, String companyName)
+    {
+        return format("%s/%s/%s/balance-sheet?freq=Q", baseUrl, stockSymbol, companyName);
+    }
+
     public static String getGrossMarginUrl(String stockSymbol, String companyName)
     {
         return format("%s/%s/%s/gross-margin", baseUrl, stockSymbol, companyName);

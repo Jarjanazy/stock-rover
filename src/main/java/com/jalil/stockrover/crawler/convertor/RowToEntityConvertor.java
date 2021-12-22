@@ -1,4 +1,4 @@
-package com.jalil.stockrover.crawler;
+package com.jalil.stockrover.crawler.convertor;
 
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.Html;

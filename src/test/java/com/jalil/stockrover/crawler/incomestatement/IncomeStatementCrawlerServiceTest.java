@@ -44,7 +44,7 @@ public class IncomeStatementCrawlerServiceTest
     }
 
     @Test
-    public void givenIncomeStatementPageUrl_WhenItHas2RowsAnd2Columns_ThenConvertItToIncomeStatement() throws IOException, InterruptedException
+    public void givenIncomeStatementPageUrl_ThenConvertItToIncomeStatement() throws IOException, InterruptedException
     {
         URL input = getClass().getResource("/incomeStatementTestPage.html").openConnection().getURL();
         HtmlPage htmlPage = createWebClientForTableRetrieval().getPage(input);

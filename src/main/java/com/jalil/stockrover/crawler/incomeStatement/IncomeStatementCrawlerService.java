@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static com.jalil.stockrover.crawler.MapToEntityConvertor.mapToIncomeStatements;
+
+import static com.jalil.stockrover.crawler.convertor.HtmlPageToMapConvertor.getDataFromTable;
+import static com.jalil.stockrover.crawler.convertor.MapToEntityConvertor.mapToIncomeStatements;
 
 @Service
 @RequiredArgsConstructor
@@ -35,20 +37,5 @@ public class IncomeStatementCrawlerService
         List<IncomeStatement> incomeStatements = mapToIncomeStatements(data, company);
 
         iIncomeStatementRepo.saveAll(incomeStatements);
-    }
-
-    private List<LinkedTreeMap<String, String>> getDataFromTable(HtmlPage htmlPage)
-    {
-        Pattern p = Pattern.compile("originalData\\s=\\s\\[\\{.*}]");
-
-        Matcher matcher = p.matcher(htmlPage.asXml());
-
-        matcher.find();
-
-        String data = matcher.group(0);
-
-        data = data.replace("originalData = ", "");
-
-        return new Gson().fromJson(data, List.class);
     }
 }

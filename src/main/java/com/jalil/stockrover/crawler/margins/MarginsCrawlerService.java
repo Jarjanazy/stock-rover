@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.jalil.stockrover.crawler.RowToEntityConvertor.rowToGrossMargin;
-import static com.jalil.stockrover.crawler.RowToEntityConvertor.rowToNetMargin;
+import static com.jalil.stockrover.crawler.convertor.RowToEntityConvertor.rowToGrossMargin;
+import static com.jalil.stockrover.crawler.convertor.RowToEntityConvertor.rowToNetMargin;
 
 @Service
 @Slf4j

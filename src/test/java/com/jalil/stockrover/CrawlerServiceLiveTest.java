@@ -1,6 +1,7 @@
 package com.jalil.stockrover;
 
 import com.jalil.stockrover.crawler.balancesheet.BalanceSheetCrawlerService;
+import com.jalil.stockrover.crawler.cashflowstatement.CashFlowStatementCrawlerService;
 import com.jalil.stockrover.crawler.incomeStatement.IncomeStatementCrawlerService;
 import com.jalil.stockrover.crawler.margins.MarginsCrawlerService;
 import com.jalil.stockrover.domain.company.Company;
@@ -11,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.IOException;
 
 @SpringBootTest
-@Disabled
+//@Disabled
 public class CrawlerServiceLiveTest
 {
     @Autowired
@@ -22,6 +23,9 @@ public class CrawlerServiceLiveTest
 
     @Autowired
     private BalanceSheetCrawlerService balanceSheetCrawlerService;
+
+    @Autowired
+    private CashFlowStatementCrawlerService cashFlowStatementCrawlerService;
 
     @Test
     public void givenTheAppleStockPageOnMacroTrends_WhenGrossMarginIsRequested_ThenGetIt() throws IOException
@@ -52,5 +56,13 @@ public class CrawlerServiceLiveTest
         Company company = Company.builder().companyName("apple").companySymbol("AAPL").build();
 
         balanceSheetCrawlerService.crawlBalanceSheet(company);
+    }
+
+    @Test
+    public void givenTheAppleStockPageOnMacroTrends_WhenCashFlowStatementIsRequested_ThenGetIt() throws IOException
+    {
+        Company company = Company.builder().companyName("apple").companySymbol("AAPL").build();
+
+        cashFlowStatementCrawlerService.crawlCashFlowStatement(company);
     }
 }

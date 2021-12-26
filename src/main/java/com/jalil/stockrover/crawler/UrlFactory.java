@@ -40,4 +40,9 @@ public class UrlFactory
     {
         return format("%s/%s/%s/net-profit-margin", baseUrl, stockSymbol, companyName);
     }
+
+    public static String getCashFlowStatementUrl(String stockSymbol, String companyName)
+    {
+        return format("%s/%s/%s/cash-flow-statement?freq=Q", baseUrl, stockSymbol, companyName);
+    }
 }

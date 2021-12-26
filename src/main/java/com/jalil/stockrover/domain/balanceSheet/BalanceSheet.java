@@ -1,5 +1,6 @@
 package com.jalil.stockrover.domain.balanceSheet;
 
+import com.jalil.stockrover.domain.company.Company;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,10 @@ public class BalanceSheet
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @Column(name = "date")
     private LocalDateTime date;

@@ -37,4 +37,10 @@ public class HtmlPageFetcher
                 .getPage(getBalanceSheetUrl(stockSymbol, companyName));
     }
 
+    public HtmlPage getCashFlowStatementHtmlPage(String stockSymbol, String companyName) throws IOException
+    {
+        return createWebClientForTableRetrieval()
+                .getPage(getCashFlowStatementUrl(stockSymbol, companyName));
+    }
+
 }

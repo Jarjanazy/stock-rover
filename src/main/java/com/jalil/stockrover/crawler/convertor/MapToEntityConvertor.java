@@ -6,6 +6,7 @@ import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,9 +16,10 @@ import java.util.stream.Collectors;
 import static java.lang.Double.parseDouble;
 
 @Slf4j
+@Service
 public class MapToEntityConvertor
 {
-    public static List<Company> mapToCompanies(List<LinkedTreeMap<String, String>> dataList)
+    public List<Company> mapToCompanies(List<LinkedTreeMap<String, String>> dataList)
     {
         return dataList
                 .stream()
@@ -25,8 +27,7 @@ public class MapToEntityConvertor
                 .collect(Collectors.toList());
     }
 
-
-    public static List<IncomeStatement> mapToIncomeStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
+    public List<IncomeStatement> mapToIncomeStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
     {
         List<String> dates = getDatesFromData(dataList);
 
@@ -36,9 +37,11 @@ public class MapToEntityConvertor
             .collect(Collectors.toList());
     }
 
-    public static List<BalanceSheet> mapToBalanceSheets(List<LinkedTreeMap<String, String>> dataList, Company company)
+    public List<BalanceSheet> mapToBalanceSheets(List<LinkedTreeMap<String, String>> dataList, Company company)
     {
         List<String> dates = getDatesFromData(dataList);
+
+        // filter our the dates that are bigger than the ones in the DB for this company in the BalanceSheet table
 
         return dates
                 .stream()
@@ -46,7 +49,7 @@ public class MapToEntityConvertor
                 .collect(Collectors.toList());
     }
 
-    public static List<CashFlowStatement> mapToCashFlowStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
+    public List<CashFlowStatement> mapToCashFlowStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
     {
         List<String> dates = getDatesFromData(dataList);
 

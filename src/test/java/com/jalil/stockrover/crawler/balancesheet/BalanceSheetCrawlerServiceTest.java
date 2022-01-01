@@ -2,6 +2,7 @@ package com.jalil.stockrover.crawler.balancesheet;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
+import com.jalil.stockrover.crawler.convertor.MapToEntityConvertor;
 import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
 import com.jalil.stockrover.domain.balanceSheet.IBalanceSheetRepo;
 import com.jalil.stockrover.domain.company.Company;
@@ -39,7 +40,8 @@ public class BalanceSheetCrawlerServiceTest
     @BeforeEach
     public void setup()
     {
-        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo);
+        MapToEntityConvertor mapToEntityConvertor = new MapToEntityConvertor();
+        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, mapToEntityConvertor);
     }
 
     @Test
@@ -63,6 +65,12 @@ public class BalanceSheetCrawlerServiceTest
         assertThat(balanceSheet.getCashOnHand()).isEqualTo(62639);
         assertThat(balanceSheet.getReceivables()).isEqualTo(51506);
         assertThat(balanceSheet.getShareHolderEquity()).isEqualTo(63090);
+    }
+
+    @Test
+    public void givenBalanceSheetPageUrl_WhenOneEntityExistsInDB_ThenDontAddIt()
+    {
+
     }
 
 }

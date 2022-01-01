@@ -42,7 +42,7 @@ public class BalanceSheetCrawlerServiceTest
     public void setup()
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
-        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
+        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor );
         this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, toEntityConvertor, toDataStructureConvertor);
     }
 
@@ -67,12 +67,6 @@ public class BalanceSheetCrawlerServiceTest
         assertThat(balanceSheet.getCashOnHand()).isEqualTo(62639);
         assertThat(balanceSheet.getReceivables()).isEqualTo(51506);
         assertThat(balanceSheet.getShareHolderEquity()).isEqualTo(63090);
-    }
-
-    @Test
-    public void givenBalanceSheetPageUrl_WhenOneEntityExistsInDB_ThenDontAddIt()
-    {
-
     }
 
 }

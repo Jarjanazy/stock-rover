@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static com.jalil.stockrover.common.util.Utils.getDateFromString;
 import static java.lang.Double.parseDouble;
 
 @Slf4j
@@ -41,12 +43,8 @@ public class ToEntityConvertor
             .collect(Collectors.toList());
     }
 
-    public List<BalanceSheet> mapToBalanceSheets(List<LinkedTreeMap<String, String>> dataList, Company company)
+    public List<BalanceSheet> mapToBalanceSheets(List<LinkedTreeMap<String, String>> dataList, List<String> dates, Company company)
     {
-        List<String> dates = toDataStructureConvertor.getDatesFromData(dataList);
-
-        // filter our the dates that are bigger than the ones in the DB for this company in the BalanceSheet table
-
         return dates
                 .stream()
                 .map(date -> createBalanceSheetFromDateAndData(date, dataList, company))
@@ -182,9 +180,4 @@ public class ToEntityConvertor
         }
     }
 
-    private LocalDateTime getDateFromString(String dateString)
-    {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return LocalDate.parse(dateString, formatter).atStartOfDay();
-    }
 }

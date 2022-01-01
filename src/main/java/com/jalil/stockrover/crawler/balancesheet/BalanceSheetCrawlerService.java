@@ -3,8 +3,8 @@ package com.jalil.stockrover.crawler.balancesheet;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.gson.internal.LinkedTreeMap;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.HtmlPageToMapConvertor;
-import com.jalil.stockrover.crawler.convertor.MapToEntityConvertor;
+import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
 import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
 import com.jalil.stockrover.domain.balanceSheet.IBalanceSheetRepo;
 import com.jalil.stockrover.domain.company.Company;
@@ -21,18 +21,18 @@ public class BalanceSheetCrawlerService
 
     private final IBalanceSheetRepo balanceSheetRepo;
 
-    private final MapToEntityConvertor mapToEntityConvertor;
+    private final ToEntityConvertor toEntityConvertor;
 
-    private final HtmlPageToMapConvertor htmlPageToMapConvertor;
+    private final ToDataStructureConvertor toDataStructureConvertor;
 
     public void crawlBalanceSheet(Company company) throws IOException
     {
         HtmlPage htmlPage =
                 htmlPageFetcher.getBalanceSheetHtmlPage(company.getCompanySymbol(), company.getCompanyName());
 
-        List<LinkedTreeMap<String, String>> data = htmlPageToMapConvertor.getDataFromTable(htmlPage);
+        List<LinkedTreeMap<String, String>> data = toDataStructureConvertor.getDataFromTable(htmlPage);
 
-        List<BalanceSheet> balanceSheets = mapToEntityConvertor.mapToBalanceSheets(data, company);
+        List<BalanceSheet> balanceSheets = toEntityConvertor.mapToBalanceSheets(data, company);
 
         balanceSheetRepo.saveAll(balanceSheets);
     }

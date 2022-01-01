@@ -2,8 +2,8 @@ package com.jalil.stockrover.crawler.cashflowstatement;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.HtmlPageToMapConvertor;
-import com.jalil.stockrover.crawler.convertor.MapToEntityConvertor;
+import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
 import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
 import com.jalil.stockrover.domain.cashflowstatement.ICashFlowStatementRepo;
 import com.jalil.stockrover.domain.company.Company;
@@ -41,9 +41,9 @@ public class CashFlowStatementCrawlerServiceTest
     @BeforeEach
     public void setup()
     {
-        HtmlPageToMapConvertor htmlPageToMapConvertor = new HtmlPageToMapConvertor();
-        MapToEntityConvertor mapToEntityConvertor = new MapToEntityConvertor();
-        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, mapToEntityConvertor, htmlPageToMapConvertor);
+        ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
+        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
+        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, toEntityConvertor, toDataStructureConvertor);
     }
 
 

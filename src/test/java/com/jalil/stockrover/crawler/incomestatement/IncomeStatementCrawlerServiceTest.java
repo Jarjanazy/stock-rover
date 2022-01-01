@@ -2,8 +2,8 @@ package com.jalil.stockrover.crawler.incomestatement;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.HtmlPageToMapConvertor;
-import com.jalil.stockrover.crawler.convertor.MapToEntityConvertor;
+import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
 import com.jalil.stockrover.crawler.incomeStatement.IncomeStatementCrawlerService;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.incomeStatement.IIncomeStatementRepo;
@@ -42,9 +42,9 @@ public class IncomeStatementCrawlerServiceTest
     @BeforeEach
     public void setup()
     {
-        HtmlPageToMapConvertor htmlPageToMapConvertor = new HtmlPageToMapConvertor();
-        MapToEntityConvertor mapToEntityConvertor = new MapToEntityConvertor();
-        incomeStatementCrawlerService = new IncomeStatementCrawlerService(htmlPageFetcher, iIncomeStatementRepo, mapToEntityConvertor, htmlPageToMapConvertor);
+        ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
+        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
+        incomeStatementCrawlerService = new IncomeStatementCrawlerService(htmlPageFetcher, iIncomeStatementRepo, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test

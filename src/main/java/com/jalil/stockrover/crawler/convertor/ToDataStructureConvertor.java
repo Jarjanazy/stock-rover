@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
-public class HtmlPageToMapConvertor
+public class ToDataStructureConvertor
 {
     public List<LinkedTreeMap<String, String>> getDataFromTable(HtmlPage htmlPage)
     {
@@ -27,5 +28,17 @@ public class HtmlPageToMapConvertor
         data = data.replaceAll(",\"name_link\"([\\s\\S]*?)(\\&gt;\")", "");
 
         return new Gson().fromJson(data, List.class);
+    }
+
+    public List<String> getDatesFromData(List<LinkedTreeMap<String, String>> dataList)
+    {
+        Pattern datePattern = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}");
+
+        return dataList
+                .get(0)
+                .keySet()
+                .stream()
+                .filter(key -> datePattern.matcher(key).matches())
+                .collect(Collectors.toList());
     }
 }

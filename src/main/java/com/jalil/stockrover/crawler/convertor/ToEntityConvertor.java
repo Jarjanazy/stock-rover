@@ -5,6 +5,7 @@ import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
 import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -17,19 +18,22 @@ import static java.lang.Double.parseDouble;
 
 @Slf4j
 @Service
-public class MapToEntityConvertor
+@RequiredArgsConstructor
+public class ToEntityConvertor
 {
+    private final ToDataStructureConvertor toDataStructureConvertor;
+
     public List<Company> mapToCompanies(List<LinkedTreeMap<String, String>> dataList)
     {
         return dataList
                 .stream()
-                .map(MapToEntityConvertor::mapToCompany)
+                .map(this::mapToCompany)
                 .collect(Collectors.toList());
     }
 
     public List<IncomeStatement> mapToIncomeStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
     {
-        List<String> dates = getDatesFromData(dataList);
+        List<String> dates = toDataStructureConvertor.getDatesFromData(dataList);
 
         return dates
             .stream()
@@ -39,7 +43,7 @@ public class MapToEntityConvertor
 
     public List<BalanceSheet> mapToBalanceSheets(List<LinkedTreeMap<String, String>> dataList, Company company)
     {
-        List<String> dates = getDatesFromData(dataList);
+        List<String> dates = toDataStructureConvertor.getDatesFromData(dataList);
 
         // filter our the dates that are bigger than the ones in the DB for this company in the BalanceSheet table
 
@@ -51,7 +55,7 @@ public class MapToEntityConvertor
 
     public List<CashFlowStatement> mapToCashFlowStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
     {
-        List<String> dates = getDatesFromData(dataList);
+        List<String> dates = toDataStructureConvertor.getDatesFromData(dataList);
 
         return dates
                 .stream()
@@ -59,7 +63,7 @@ public class MapToEntityConvertor
                 .collect(Collectors.toList());
     }
 
-    private static Company mapToCompany(LinkedTreeMap<String, String> data)
+    private Company mapToCompany(LinkedTreeMap<String, String> data)
     {
         return Company
                 .builder()
@@ -72,7 +76,7 @@ public class MapToEntityConvertor
                 .build();
     }
 
-    private static CashFlowStatement createCashFlowStatementFromDataAndDate(String date, List<LinkedTreeMap<String, String>> dataList, Company company)
+    private CashFlowStatement createCashFlowStatementFromDataAndDate(String date, List<LinkedTreeMap<String, String>> dataList, Company company)
     {
         return CashFlowStatement
                 .builder()
@@ -108,7 +112,7 @@ public class MapToEntityConvertor
                 .build();
     }
 
-    private static BalanceSheet createBalanceSheetFromDateAndData(String date, List<LinkedTreeMap<String, String>> dataList, Company company)
+    private BalanceSheet createBalanceSheetFromDateAndData(String date, List<LinkedTreeMap<String, String>> dataList, Company company)
     {
         return BalanceSheet
                 .builder()
@@ -136,7 +140,7 @@ public class MapToEntityConvertor
                 .build();
     }
 
-    private static IncomeStatement createIncomeStatementFromDateAndData(String date, List<LinkedTreeMap<String, String>> dataList, Company company)
+    private IncomeStatement createIncomeStatementFromDateAndData(String date, List<LinkedTreeMap<String, String>> dataList, Company company)
     {
         return IncomeStatement
                 .builder()
@@ -164,7 +168,7 @@ public class MapToEntityConvertor
                 .build();
     }
 
-    private static double parseDoubleOrGet0(Object value)
+    private double parseDoubleOrGet0(Object value)
     {
         if (value instanceof Double) return (double) value;
 
@@ -178,19 +182,7 @@ public class MapToEntityConvertor
         }
     }
 
-    private static List<String> getDatesFromData(List<LinkedTreeMap<String, String>> dataList)
-    {
-        Pattern datePattern = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}");
-
-        return dataList
-                .get(0)
-                .keySet()
-                .stream()
-                .filter(key -> datePattern.matcher(key).matches())
-                .collect(Collectors.toList());
-    }
-
-    private static LocalDateTime getDateFromString(String dateString)
+    private LocalDateTime getDateFromString(String dateString)
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(dateString, formatter).atStartOfDay();

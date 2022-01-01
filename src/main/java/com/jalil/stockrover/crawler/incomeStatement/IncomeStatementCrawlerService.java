@@ -1,11 +1,10 @@
 package com.jalil.stockrover.crawler.incomeStatement;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.HtmlPageToMapConvertor;
-import com.jalil.stockrover.crawler.convertor.MapToEntityConvertor;
+import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.incomeStatement.IIncomeStatementRepo;
 import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
@@ -24,18 +23,18 @@ public class IncomeStatementCrawlerService
 
     private final IIncomeStatementRepo iIncomeStatementRepo;
 
-    private final MapToEntityConvertor mapToEntityConvertor;
+    private final ToEntityConvertor toEntityConvertor;
 
-    private final HtmlPageToMapConvertor htmlPageToMapConvertor;
+    private final ToDataStructureConvertor toDataStructureConvertor;
 
     public void crawlIncomeStatement(Company company) throws IOException
     {
         HtmlPage htmlPage = htmlPageFetcher
                 .getIncomeStatementHtmlPage(company.getCompanySymbol(), company.getCompanyName());
 
-        List<LinkedTreeMap<String, String>> data = htmlPageToMapConvertor.getDataFromTable(htmlPage);
+        List<LinkedTreeMap<String, String>> data = toDataStructureConvertor.getDataFromTable(htmlPage);
 
-        List<IncomeStatement> incomeStatements = mapToEntityConvertor.mapToIncomeStatements(data, company);
+        List<IncomeStatement> incomeStatements = toEntityConvertor.mapToIncomeStatements(data, company);
 
         iIncomeStatementRepo.saveAll(incomeStatements);
     }

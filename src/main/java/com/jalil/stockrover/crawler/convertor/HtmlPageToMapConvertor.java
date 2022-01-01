@@ -13,7 +13,7 @@ public class HtmlPageToMapConvertor
 
     public static List<LinkedTreeMap<String, String>> getDataFromTable(HtmlPage htmlPage)
     {
-        Pattern p = Pattern.compile("originalData\\s=\\s\\[\\{.*}]");
+        Pattern p = Pattern.compile("originalData\\s=\\s\\[\\{[\\s\\S]*}]");
 
         Matcher matcher = p.matcher(htmlPage.asXml());
 
@@ -22,6 +22,9 @@ public class HtmlPageToMapConvertor
         String data = matcher.group(0);
 
         data = data.replace("originalData = ", "");
+
+        //replace everything between (,"name_link") and (&gt;") with empty string
+        data = data.replaceAll(",\"name_link\"([\\s\\S]*?)(\\&gt;\")", "");
 
         return new Gson().fromJson(data, List.class);
     }

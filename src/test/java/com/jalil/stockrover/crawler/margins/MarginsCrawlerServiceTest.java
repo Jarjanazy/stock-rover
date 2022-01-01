@@ -51,7 +51,7 @@ public class MarginsCrawlerServiceTest
 
 
     @Test
-    public void givenAGrossMarginsPage_WhenItHas1Row_ThenConvertItToGrossMargin() throws IOException
+    public void givenAGrossMarginsPage_ThenConvertItToGrossMargin() throws IOException
     {
         URL input = getClass().getResource("/grossMarginTestPage.html").openConnection().getURL();
         HtmlPage htmlPage = createWebClient().getPage(input);

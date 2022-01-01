@@ -43,4 +43,9 @@ public class HtmlPageFetcher
                 .getPage(getCashFlowStatementUrl(stockSymbol, companyName));
     }
 
+    public HtmlPage getStockScreenerHtmlPage() throws IOException
+    {
+        return createWebClientForTableRetrieval().getPage(getStocksScreenerUrl());
+    }
+
 }

@@ -45,4 +45,9 @@ public class UrlFactory
     {
         return format("%s/%s/%s/cash-flow-statement?freq=Q", baseUrl, stockSymbol, companyName);
     }
+
+    public static String getStocksScreenerUrl()
+    {
+        return "https://www.macrotrends.net/stocks/stock-screener";
+    }
 }

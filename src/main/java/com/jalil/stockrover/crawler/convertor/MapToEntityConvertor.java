@@ -6,20 +6,26 @@ import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
 import lombok.extern.slf4j.Slf4j;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static java.lang.Double.TYPE;
 import static java.lang.Double.parseDouble;
 
 @Slf4j
 public class MapToEntityConvertor
 {
+    public static List<Company> mapToCompanies(List<LinkedTreeMap<String, String>> dataList)
+    {
+        return dataList
+                .stream()
+                .map(MapToEntityConvertor::mapToCompany)
+                .collect(Collectors.toList());
+    }
+
+
     public static List<IncomeStatement> mapToIncomeStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
     {
         List<String> dates = getDatesFromData(dataList);
@@ -48,6 +54,19 @@ public class MapToEntityConvertor
                 .stream()
                 .map(date -> createCashFlowStatementFromDataAndDate(date, dataList, company))
                 .collect(Collectors.toList());
+    }
+
+    private static Company mapToCompany(LinkedTreeMap<String, String> data)
+    {
+        return Company
+                .builder()
+                .companySymbol(data.get("ticker"))
+                .companyName(data.get("comp_name"))
+                .companyNameDisplay(data.get("comp_name_2"))
+                .industry(data.get("zacks_x_ind_desc"))
+                .exchange(data.get("exchange"))
+                .countryCode(data.get("country_code"))
+                .build();
     }
 
     private static CashFlowStatement createCashFlowStatementFromDataAndDate(String date, List<LinkedTreeMap<String, String>> dataList, Company company)

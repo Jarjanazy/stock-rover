@@ -3,15 +3,15 @@ package com.jalil.stockrover.crawler.convertor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-
+import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class HtmlPageToMapConvertor
 {
-
-    public static List<LinkedTreeMap<String, String>> getDataFromTable(HtmlPage htmlPage)
+    public List<LinkedTreeMap<String, String>> getDataFromTable(HtmlPage htmlPage)
     {
         Pattern p = Pattern.compile("originalData\\s=\\s\\[\\{[\\s\\S]*}]");
 

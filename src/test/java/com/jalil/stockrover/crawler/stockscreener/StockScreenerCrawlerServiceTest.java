@@ -2,6 +2,7 @@ package com.jalil.stockrover.crawler.stockscreener;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
+import com.jalil.stockrover.crawler.convertor.HtmlPageToMapConvertor;
 import com.jalil.stockrover.crawler.convertor.MapToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.company.ICompanyRepo;
@@ -41,8 +42,9 @@ public class StockScreenerCrawlerServiceTest
     @BeforeEach
     public void setup()
     {
+        HtmlPageToMapConvertor htmlPageToMapConvertor = new HtmlPageToMapConvertor();
         MapToEntityConvertor mapToEntityConvertor = new MapToEntityConvertor();
-        stockScreenerCrawlerService = new StockScreenerCrawlerService(htmlPageFetcher, companyRepo, mapToEntityConvertor);
+        stockScreenerCrawlerService = new StockScreenerCrawlerService(htmlPageFetcher, companyRepo, mapToEntityConvertor, htmlPageToMapConvertor);
     }
 
     @Test

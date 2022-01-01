@@ -2,6 +2,7 @@ package com.jalil.stockrover.crawler.cashflowstatement;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
+import com.jalil.stockrover.crawler.convertor.HtmlPageToMapConvertor;
 import com.jalil.stockrover.crawler.convertor.MapToEntityConvertor;
 import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
 import com.jalil.stockrover.domain.cashflowstatement.ICashFlowStatementRepo;
@@ -40,8 +41,9 @@ public class CashFlowStatementCrawlerServiceTest
     @BeforeEach
     public void setup()
     {
+        HtmlPageToMapConvertor htmlPageToMapConvertor = new HtmlPageToMapConvertor();
         MapToEntityConvertor mapToEntityConvertor = new MapToEntityConvertor();
-        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, mapToEntityConvertor);
+        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, mapToEntityConvertor, htmlPageToMapConvertor);
     }
 
 

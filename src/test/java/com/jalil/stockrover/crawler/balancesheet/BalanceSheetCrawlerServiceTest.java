@@ -1,6 +1,7 @@
 package com.jalil.stockrover.crawler.balancesheet;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
 import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
@@ -35,6 +36,9 @@ public class BalanceSheetCrawlerServiceTest
     @Mock
     private IBalanceSheetRepo balanceSheetRepo;
 
+    @Mock
+    private DynamicDataRepo dynamicDataRepo;
+
     @Captor
     private ArgumentCaptor<List<BalanceSheet>> balanceSheetCaptor;
 
@@ -43,7 +47,7 @@ public class BalanceSheetCrawlerServiceTest
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
         ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor );
-        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, toEntityConvertor, toDataStructureConvertor);
+        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, dynamicDataRepo, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test

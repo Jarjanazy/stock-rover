@@ -1,11 +1,12 @@
 package com.jalil.stockrover.crawler.balancesheet;
 
+import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
 import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
+import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
 import com.jalil.stockrover.domain.balanceSheet.IBalanceSheetRepo;
 import com.jalil.stockrover.domain.company.Company;
-import com.jalil.stockrover.domain.dbprojection.MaxDateProjection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +37,9 @@ public class BalanceSheetCrawlerServiceWithMocksTest
     IBalanceSheetRepo balanceSheetRepo;
 
     @Mock
+    DynamicDataRepo dynamicDataRepo;
+
+    @Mock
     ToDataStructureConvertor toDataStructureConvertor;
 
     @Mock
@@ -51,7 +53,7 @@ public class BalanceSheetCrawlerServiceWithMocksTest
     @BeforeEach
     public void setup()
     {
-        balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, toEntityConvertor, toDataStructureConvertor);
+        balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, dynamicDataRepo, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test
@@ -64,10 +66,9 @@ public class BalanceSheetCrawlerServiceWithMocksTest
         Company company = Company.builder().companySymbol("AAPL").companyName("apple").build();
 
         LocalDateTime maxDate = getDateFromString("2020-01-10");
-        MaxDateProjection maxDateProjection = new MaxDateProjection(maxDate);
 
-        when(balanceSheetRepo.findByCompanyAndDateMax(company))
-                .thenReturn(Optional.of(maxDateProjection));
+        when(dynamicDataRepo.findByCompanyAndDateMax(BalanceSheet.class, company))
+                .thenReturn(Optional.of(maxDate));
 
         balanceSheetCrawlerService.crawlBalanceSheet(company);
 

@@ -1,13 +1,14 @@
-package com.jalil.stockrover.crawler.balancesheet;
+package com.jalil.stockrover.common;
 
+import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
 import com.jalil.stockrover.domain.balanceSheet.IBalanceSheetRepo;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.company.ICompanyRepo;
-import com.jalil.stockrover.domain.dbprojection.MaxDateProjection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -15,14 +16,17 @@ import static com.jalil.stockrover.common.util.Utils.getDateFromString;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-public class BalanceSheetRepoTest
+@SpringBootTest
+public class DynamicDataRepoTest
 {
     @Autowired
     IBalanceSheetRepo balanceSheetRepo;
 
     @Autowired
     ICompanyRepo companyRepo;
+
+    @Autowired
+    DynamicDataRepo dynamicDataRepo;
 
     @Test
     public void givenTwoBalanceSheetInDB_WhenOneDateIsBiggest_ThenFetchIt()
@@ -46,10 +50,10 @@ public class BalanceSheetRepoTest
 
         balanceSheetRepo.saveAll(asList(balanceSheet1, balanceSheet2));
 
-        Optional<MaxDateProjection> byCompanyAndDateMax = balanceSheetRepo.findByCompanyAndDateMax(company);
+        Optional<LocalDateTime> byCompanyAndDateMax = dynamicDataRepo.findByCompanyAndDateMax(BalanceSheet.class, company);
 
         assertThat(byCompanyAndDateMax).isPresent();
-        assertThat(byCompanyAndDateMax.get().getDate()).isEqualTo(date2);
+        assertThat(byCompanyAndDateMax.get()).isEqualTo(date2);
     }
 
 }

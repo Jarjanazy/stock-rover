@@ -1,6 +1,8 @@
 package com.jalil.stockrover.crawler.cashflowstatement;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.jalil.stockrover.common.repo.DynamicDataRepo;
+import com.jalil.stockrover.common.service.FilterService;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
 import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
@@ -35,6 +37,9 @@ public class CashFlowStatementCrawlerServiceFromHtmlPageTest
     @Mock
     private ICashFlowStatementRepo cashFlowStatementRepo;
 
+    @Mock
+    private DynamicDataRepo dynamicDataRepo;
+
     @Captor
     private ArgumentCaptor<List<CashFlowStatement>> captor;
 
@@ -43,7 +48,9 @@ public class CashFlowStatementCrawlerServiceFromHtmlPageTest
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
         ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
-        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, toEntityConvertor, toDataStructureConvertor);
+
+        FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
+        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, filterService, toEntityConvertor, toDataStructureConvertor);
     }
 
 

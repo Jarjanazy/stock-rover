@@ -1,6 +1,8 @@
 package com.jalil.stockrover.crawler.incomestatement;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.jalil.stockrover.common.repo.DynamicDataRepo;
+import com.jalil.stockrover.common.service.FilterService;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
 import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
@@ -35,6 +37,9 @@ public class IncomeStatementCrawlerServiceFromHtmlPageTest
     @Mock
     private IIncomeStatementRepo iIncomeStatementRepo;
 
+    @Mock
+    DynamicDataRepo dynamicDataRepo;
+
     @Captor
     ArgumentCaptor<List<IncomeStatement>> argumentCaptor;
 
@@ -44,7 +49,9 @@ public class IncomeStatementCrawlerServiceFromHtmlPageTest
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
         ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
-        incomeStatementCrawlerService = new IncomeStatementCrawlerService(htmlPageFetcher, iIncomeStatementRepo, toEntityConvertor, toDataStructureConvertor);
+
+        FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
+        incomeStatementCrawlerService = new IncomeStatementCrawlerService(htmlPageFetcher, iIncomeStatementRepo, filterService, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test

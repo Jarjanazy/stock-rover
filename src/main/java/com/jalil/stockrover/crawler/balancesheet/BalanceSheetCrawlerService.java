@@ -3,6 +3,7 @@ package com.jalil.stockrover.crawler.balancesheet;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.gson.internal.LinkedTreeMap;
 import com.jalil.stockrover.common.repo.DynamicDataRepo;
+import com.jalil.stockrover.common.service.FilterService;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
 import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
@@ -29,7 +30,7 @@ public class BalanceSheetCrawlerService
 
     private final IBalanceSheetRepo balanceSheetRepo;
 
-    private final DynamicDataRepo dynamicDataRepo;
+    private final FilterService filterService;
 
     private final ToEntityConvertor toEntityConvertor;
 
@@ -42,38 +43,11 @@ public class BalanceSheetCrawlerService
 
         List<LinkedTreeMap<String, String>> data = toDataStructureConvertor.getDataFromTable(htmlPage);
 
-        List<String> dates = toDataStructureConvertor.getDatesFromData(data);
-
-        List<String> filteredDates = filterDatesBiggerThanOnesInDB(dates, company);
+        List<String> filteredDates = filterService.filterDatesBiggerThanOnesInDB(data, company, BalanceSheet.class);
 
         List<BalanceSheet> balanceSheets = toEntityConvertor.mapToBalanceSheets(data, filteredDates, company);
 
         balanceSheetRepo.saveAll(balanceSheets);
-    }
-
-    private List<String> filterDatesBiggerThanOnesInDB(List<String> dates, Company company)
-    {
-       Optional<LocalDateTime> maxDate = dynamicDataRepo.findByCompanyAndDateMax(BalanceSheet.class, company);
-
-        if (maxDate.isEmpty()) return dates;
-
-        return dates
-                .stream()
-                .filter(date -> dateIsBiggerThanMax(date, maxDate.get()))
-                .collect(Collectors.toList());
-    }
-
-    private boolean dateIsBiggerThanMax(String date, LocalDateTime maxDate)
-    {
-        try
-        {
-            return getDateFromString(date).isAfter(maxDate);
-        }catch (Exception e)
-        {
-            log.error("An error happened while comparing {} to maxDate", date, e);
-            return false;
-        }
-
     }
 
 }

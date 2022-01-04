@@ -2,6 +2,7 @@ package com.jalil.stockrover.crawler.balancesheet;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.common.repo.DynamicDataRepo;
+import com.jalil.stockrover.common.service.FilterService;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
 import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
@@ -46,8 +47,10 @@ public class BalanceSheetCrawlerServiceFromHtmlPageTest
     public void setup()
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
-        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor );
-        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, dynamicDataRepo, toEntityConvertor, toDataStructureConvertor);
+        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
+
+        FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
+        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, filterService, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test

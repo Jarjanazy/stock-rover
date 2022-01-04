@@ -33,10 +33,8 @@ public class ToEntityConvertor
                 .collect(Collectors.toList());
     }
 
-    public List<IncomeStatement> mapToIncomeStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
+    public List<IncomeStatement> mapToIncomeStatements(List<LinkedTreeMap<String, String>> dataList, List<String> dates, Company company)
     {
-        List<String> dates = toDataStructureConvertor.getDatesFromData(dataList);
-
         return dates
             .stream()
             .map(date -> createIncomeStatementFromDateAndData(date, dataList, company))
@@ -51,10 +49,8 @@ public class ToEntityConvertor
                 .collect(Collectors.toList());
     }
 
-    public List<CashFlowStatement> mapToCashFlowStatements(List<LinkedTreeMap<String, String>> dataList, Company company)
+    public List<CashFlowStatement> mapToCashFlowStatements(List<LinkedTreeMap<String, String>> dataList, List<String> dates, Company company)
     {
-        List<String> dates = toDataStructureConvertor.getDatesFromData(dataList);
-
         return dates
                 .stream()
                 .map(date -> createCashFlowStatementFromDataAndDate(date, dataList, company))

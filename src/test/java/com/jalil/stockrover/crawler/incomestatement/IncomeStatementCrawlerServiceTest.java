@@ -1,13 +1,17 @@
-package com.jalil.stockrover.crawler.balancesheet;
+package com.jalil.stockrover.crawler.incomestatement;
 
 import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.common.service.FilterService;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
+import com.jalil.stockrover.crawler.cashflowstatement.CashFlowStatementCrawlerService;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
 import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
-import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
-import com.jalil.stockrover.domain.balanceSheet.IBalanceSheetRepo;
+import com.jalil.stockrover.crawler.incomeStatement.IncomeStatementCrawlerService;
+import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
+import com.jalil.stockrover.domain.cashflowstatement.ICashFlowStatementRepo;
 import com.jalil.stockrover.domain.company.Company;
+import com.jalil.stockrover.domain.incomeStatement.IIncomeStatementRepo;
+import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,13 +33,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class BalanceSheetCrawlerServiceTest
+public class IncomeStatementCrawlerServiceTest
 {
     @Mock
     HtmlPageFetcher htmlPageFetcher;
 
     @Mock
-    IBalanceSheetRepo balanceSheetRepo;
+    IIncomeStatementRepo iIncomeStatementRepo;
 
     @Mock
     DynamicDataRepo dynamicDataRepo;
@@ -49,13 +53,13 @@ public class BalanceSheetCrawlerServiceTest
     @Captor
     ArgumentCaptor<List<String>> datesArgumentCaptor;
 
-    BalanceSheetCrawlerService balanceSheetCrawlerService;
+    IncomeStatementCrawlerService incomeStatementCrawlerService;
 
     @BeforeEach
     public void setup()
     {
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
-        balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, filterService, toEntityConvertor, toDataStructureConvertor);
+        incomeStatementCrawlerService = new IncomeStatementCrawlerService(htmlPageFetcher, iIncomeStatementRepo, filterService, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test
@@ -69,12 +73,12 @@ public class BalanceSheetCrawlerServiceTest
 
         LocalDateTime maxDate = getDateFromString("2020-01-10");
 
-        when(dynamicDataRepo.findByCompanyAndDateMax(BalanceSheet.class, company))
+        when(dynamicDataRepo.findByCompanyAndDateMax(IncomeStatement.class, company))
                 .thenReturn(Optional.of(maxDate));
 
-        balanceSheetCrawlerService.crawlBalanceSheet(company);
+        incomeStatementCrawlerService.crawlIncomeStatement(company);
 
-        verify(toEntityConvertor).mapToBalanceSheets(any(), datesArgumentCaptor.capture(), any());
+        verify(toEntityConvertor).mapToIncomeStatements(any(), datesArgumentCaptor.capture(), any());
 
         List<String> capturedDates = datesArgumentCaptor.getValue();
         assertThat(capturedDates).hasSize(1);

@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class CashFlowStatementCrawlerServiceTest
+public class CashFlowStatementCrawlerServiceFromHtmlPageTest
 {
     private CashFlowStatementCrawlerService cashFlowStatementCrawlerService;
 

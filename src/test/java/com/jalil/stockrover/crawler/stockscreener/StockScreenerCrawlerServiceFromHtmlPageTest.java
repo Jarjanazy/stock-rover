@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class StockScreenerCrawlerServiceTest
+public class StockScreenerCrawlerServiceFromHtmlPageTest
 {
     private StockScreenerCrawlerService stockScreenerCrawlerService;
 

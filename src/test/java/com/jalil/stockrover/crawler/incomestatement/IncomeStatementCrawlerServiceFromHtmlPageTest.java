@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class IncomeStatementCrawlerServiceTest
+public class IncomeStatementCrawlerServiceFromHtmlPageTest
 {
     private IncomeStatementCrawlerService incomeStatementCrawlerService;
 

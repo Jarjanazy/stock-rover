@@ -1,6 +1,5 @@
 package com.jalil.stockrover.crawler.balancesheet;
 
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
@@ -14,63 +13,70 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-import static com.jalil.stockrover.crawler.WebClientFactory.createWebClientForTableRetrieval;
+import static com.jalil.stockrover.common.util.Utils.getDateFromString;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class BalanceSheetCrawlerServiceTest
 {
-    private BalanceSheetCrawlerService balanceSheetCrawlerService;
+    @Mock
+    HtmlPageFetcher htmlPageFetcher;
 
     @Mock
-    private HtmlPageFetcher htmlPageFetcher;
+    IBalanceSheetRepo balanceSheetRepo;
 
     @Mock
-    private IBalanceSheetRepo balanceSheetRepo;
+    DynamicDataRepo dynamicDataRepo;
 
     @Mock
-    private DynamicDataRepo dynamicDataRepo;
+    ToDataStructureConvertor toDataStructureConvertor;
+
+    @Mock
+    ToEntityConvertor toEntityConvertor;
 
     @Captor
-    private ArgumentCaptor<List<BalanceSheet>> balanceSheetCaptor;
+    ArgumentCaptor<List<String>> datesArgumentCaptor;
+
+    BalanceSheetCrawlerService balanceSheetCrawlerService;
 
     @BeforeEach
     public void setup()
     {
-        ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
-        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor );
-        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, dynamicDataRepo, toEntityConvertor, toDataStructureConvertor);
+        balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, dynamicDataRepo, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test
-    public void givenBalanceSheetPageUrl_ThenConvertItToBalanceSheet() throws IOException
+    public void givenDataAndDates_WhenOneDateIsSmallerThanLargestOneInDB_ThenDontAddIt() throws IOException
     {
-        URL input = getClass().getResource("/balanceSheetTestPage.html").openConnection().getURL();
-        HtmlPage htmlPage = createWebClientForTableRetrieval().getPage(input);
 
-        when(htmlPageFetcher.getBalanceSheetHtmlPage("AAPL", "Apple")).thenReturn(htmlPage);
+        when(toDataStructureConvertor.getDatesFromData(any()))
+                .thenReturn(asList("2020-01-05", "2020-02-05"));
 
-        Company company = Company.builder().companyName("Apple").companySymbol("AAPL").build();
+        Company company = Company.builder().companySymbol("AAPL").companyName("apple").build();
+
+        LocalDateTime maxDate = getDateFromString("2020-01-10");
+
+        when(dynamicDataRepo.findByCompanyAndDateMax(BalanceSheet.class, company))
+                .thenReturn(Optional.of(maxDate));
 
         balanceSheetCrawlerService.crawlBalanceSheet(company);
 
-        verify(balanceSheetRepo).saveAll(balanceSheetCaptor.capture());
+        verify(toEntityConvertor).mapToBalanceSheets(any(), datesArgumentCaptor.capture(), any());
 
-        List<BalanceSheet> balanceSheets = balanceSheetCaptor.getValue();
-
-        assertThat(balanceSheets).hasSize(67);
-        BalanceSheet balanceSheet = balanceSheets.get(0);
-        assertThat(balanceSheet.getCashOnHand()).isEqualTo(62639);
-        assertThat(balanceSheet.getReceivables()).isEqualTo(51506);
-        assertThat(balanceSheet.getShareHolderEquity()).isEqualTo(63090);
+        List<String> capturedDates = datesArgumentCaptor.getValue();
+        assertThat(capturedDates).hasSize(1);
+        assertThat(capturedDates.get(0)).isEqualTo("2020-02-05");
     }
 
 }

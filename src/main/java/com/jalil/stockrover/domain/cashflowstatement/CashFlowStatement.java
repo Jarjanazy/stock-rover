@@ -58,10 +58,10 @@ public class CashFlowStatement
     @Column(name = "operating_activities_cash_flow")
     private double operatingActivitiesCashFlow;
 
-    @Column(name = "property_plant_equipment_net change")
+    @Column(name = "property_plant_equipment_net_change")
     private double propertyPlantEquipmentNetChange;
 
-    @Column(name = "intangible_assets_net change")
+    @Column(name = "intangible_assets_net_change")
     private double intangibleAssetsNetChange;
 
     @Column(name = "net_acquisitions_divestitures")

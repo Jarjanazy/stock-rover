@@ -47,7 +47,7 @@ public class CashFlowStatementCrawlerServiceFromHtmlPageTest
     public void setup()
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
-        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
+        ToEntityConvertor toEntityConvertor = new ToEntityConvertor();
 
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
         cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, filterService, toEntityConvertor, toDataStructureConvertor);

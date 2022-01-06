@@ -10,14 +10,15 @@ import com.jalil.stockrover.domain.company.ICompanyRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+
+import static com.jalil.stockrover.crawler.WebClientFactory.createWebClient;
 
 @Service
 @RequiredArgsConstructor
 public class StockScreenerCrawlerService
 {
-    private final HtmlPageFetcher htmlPageFetcher;
-
     private final ICompanyRepo companyRepo;
 
     private final ToEntityConvertor toEntityConvertor;
@@ -26,7 +27,9 @@ public class StockScreenerCrawlerService
 
     public void crawlStockScreener() throws IOException
     {
-        HtmlPage htmlPage = htmlPageFetcher.getStockScreenerHtmlPage();
+        URL input = getClass().getResource("/htmlPage/stockScreenerTestPage.html").openConnection().getURL();
+
+        HtmlPage htmlPage = createWebClient().getPage(input);
 
         List<LinkedTreeMap<String, String>> data = toDataStructureConvertor.getDataFromTable(htmlPage);
 

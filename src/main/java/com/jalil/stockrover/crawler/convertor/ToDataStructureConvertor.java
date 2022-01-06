@@ -25,7 +25,7 @@ public class ToDataStructureConvertor
         data = data.replace("originalData = ", "");
 
         //replace everything between (,"name_link") and (&gt;") with empty string
-        data = data.replaceAll(",\"name_link\"([\\s\\S]*?)(\\&gt;\")", "");
+        data = data.replaceAll(",\"name_link\"([\\s\\S]+?)(\\&gt;\")", "");
 
         return new Gson().fromJson(data, List.class);
     }

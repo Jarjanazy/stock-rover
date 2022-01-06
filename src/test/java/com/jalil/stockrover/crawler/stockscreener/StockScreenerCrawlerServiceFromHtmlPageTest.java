@@ -29,9 +29,6 @@ public class StockScreenerCrawlerServiceFromHtmlPageTest
     private StockScreenerCrawlerService stockScreenerCrawlerService;
 
     @Mock
-    private HtmlPageFetcher htmlPageFetcher;
-
-    @Mock
     private ICompanyRepo companyRepo;
 
     @Captor
@@ -41,8 +38,8 @@ public class StockScreenerCrawlerServiceFromHtmlPageTest
     public void setup()
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
-        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
-        stockScreenerCrawlerService = new StockScreenerCrawlerService(htmlPageFetcher, companyRepo, toEntityConvertor, toDataStructureConvertor);
+        ToEntityConvertor toEntityConvertor = new ToEntityConvertor();
+        stockScreenerCrawlerService = new StockScreenerCrawlerService(companyRepo, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test
@@ -50,8 +47,6 @@ public class StockScreenerCrawlerServiceFromHtmlPageTest
     {
         URL input = getClass().getResource("/stockScreenerTestPage.html").openConnection().getURL();
         HtmlPage htmlPage = createWebClient().getPage(input);
-
-        when(htmlPageFetcher.getStockScreenerHtmlPage()).thenReturn(htmlPage);
 
         stockScreenerCrawlerService.crawlStockScreener();
 

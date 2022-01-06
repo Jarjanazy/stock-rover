@@ -20,11 +20,8 @@ import static java.lang.Double.parseDouble;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ToEntityConvertor
 {
-    private final ToDataStructureConvertor toDataStructureConvertor;
-
     public List<Company> mapToCompanies(List<LinkedTreeMap<String, String>> dataList)
     {
         return dataList

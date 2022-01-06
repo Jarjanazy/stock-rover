@@ -47,7 +47,7 @@ public class BalanceSheetCrawlerServiceFromHtmlPageTest
     public void setup()
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
-        ToEntityConvertor toEntityConvertor = new ToEntityConvertor(toDataStructureConvertor);
+        ToEntityConvertor toEntityConvertor = new ToEntityConvertor();
 
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
         this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, filterService, toEntityConvertor, toDataStructureConvertor);

@@ -43,4 +43,14 @@ public class CrawlingControllerTest
         verify(balanceSheetCrawlerService).crawlAllBalanceSheets();
     }
 
+    @Test
+    public void givenCrawlUnCrawledCompaniesBalanceSheetsEndpoint_WhenCalled_ThenReturn200() throws Exception
+    {
+        mockMvc.perform(post("/crawler/uncrawled-balance-sheets"))
+                .andExpect(status().isOk());
+
+        verify(balanceSheetCrawlerService).crawlUnCrawledBalanceSheets();
+
+    }
+
 }

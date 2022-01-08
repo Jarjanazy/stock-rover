@@ -30,4 +30,10 @@ public class CrawlingController
         balanceSheetCrawlerService.crawlAllBalanceSheets();
     }
 
+    @PostMapping("/uncrawled-balance-sheets")
+    public void crawlUnCrawledBalanceSheets()
+    {
+        balanceSheetCrawlerService.crawlUnCrawledBalanceSheets();
+    }
+
 }

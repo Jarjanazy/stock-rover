@@ -58,7 +58,7 @@ public class BalanceSheetCrawlerServiceTest
     public void setup()
     {
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
-        balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, companyRepo, filterService, toEntityConvertor, toDataStructureConvertor);
+        balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, companyRepo, dynamicDataRepo, filterService, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test
@@ -94,6 +94,18 @@ public class BalanceSheetCrawlerServiceTest
         balanceSheetCrawlerService.crawlAllBalanceSheets();
 
         verify(htmlPageFetcher).getBalanceSheetHtmlPage("c1", "test1");
+    }
+
+    @Test
+    public void givenAllCompanies_ThenCrawlUnCrawledOnes() throws IOException
+    {
+        Company company1 = Company.builder().companyName("test14").companySymbol("c12").build();
+
+        when(dynamicDataRepo.findUnCrawledCompanies(BalanceSheet.class)).thenReturn(singletonList(company1));
+
+        balanceSheetCrawlerService.crawlUnCrawledBalanceSheets();
+
+        verify(htmlPageFetcher).getBalanceSheetHtmlPage("c12", "test14");
     }
 
 }

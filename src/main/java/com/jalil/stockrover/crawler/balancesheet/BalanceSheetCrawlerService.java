@@ -2,6 +2,7 @@ package com.jalil.stockrover.crawler.balancesheet;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.gson.internal.LinkedTreeMap;
+import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.common.service.FilterService;
 import com.jalil.stockrover.crawler.HtmlPageFetcher;
 import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
@@ -27,6 +28,8 @@ public class BalanceSheetCrawlerService
 
     private final ICompanyRepo companyRepo;
 
+    private final DynamicDataRepo dynamicDataRepo;
+
     private final FilterService filterService;
 
     private final ToEntityConvertor toEntityConvertor;
@@ -40,6 +43,15 @@ public class BalanceSheetCrawlerService
                 .forEach(this::crawlBalanceSheet);
     }
 
+    public void crawlUnCrawledBalanceSheets()
+    {
+        List<Company> unCrawledCompanies = dynamicDataRepo.findUnCrawledCompanies(BalanceSheet.class);
+
+        unCrawledCompanies
+                .stream()
+                .parallel()
+                .forEach(this::crawlBalanceSheet);
+    }
 
     public void crawlBalanceSheet(Company company)
     {
@@ -66,5 +78,4 @@ public class BalanceSheetCrawlerService
                     company.getCompanyName(), e);
         }
     }
-
 }

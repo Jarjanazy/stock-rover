@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.jalil.stockrover.common.util.Utils.getDateFromString;
@@ -54,6 +55,45 @@ public class DynamicDataRepoTest
 
         assertThat(byCompanyAndDateMax).isPresent();
         assertThat(byCompanyAndDateMax.get()).isEqualTo(date2);
+    }
+
+    @Test
+    public void givenTwoCompanies_WhenOneDoesntExistInBalanceSheetTable_ThenReturnIt()
+    {
+        Company company1 = Company
+                .builder()
+                .companyName("TEST")
+                .companySymbol("test")
+                .companyNameDisplay("test")
+                .countryCode("test")
+                .exchange("test")
+                .industry("test")
+                .build();
+
+        Company company2 = Company
+                .builder()
+                .companyName("TEST2")
+                .companySymbol("test2")
+                .companyNameDisplay("test2")
+                .countryCode("test2")
+                .exchange("test2")
+                .industry("test2")
+                .build();
+
+        companyRepo.saveAll(asList(company1, company2));
+
+        BalanceSheet balanceSheet = BalanceSheet
+                .builder()
+                .company(company1)
+                .build();
+
+        balanceSheetRepo.save(balanceSheet);
+
+        List<Company> unCrawledCompanies = dynamicDataRepo.findUnCrawledCompanies(BalanceSheet.class);
+
+        assertThat(unCrawledCompanies).hasSize(1);
+        Company uncrawledCompany = unCrawledCompanies.get(0);
+        assertThat(uncrawledCompany.getCompanyName()).isEqualTo("TEST2");
     }
 
 }

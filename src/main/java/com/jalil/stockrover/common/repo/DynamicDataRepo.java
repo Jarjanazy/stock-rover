@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -29,5 +30,15 @@ public class DynamicDataRepo
         {
             return Optional.empty();
         }
+    }
+
+    public List<Company> findUnCrawledCompanies(Class wantedClass)
+    {
+        String query = format("select company from %s company where company.id not in (select distinct c.company.id from %s c)",
+                Company.class.getName(), wantedClass.getName());
+
+        return entityManager
+                .createQuery(query, Company.class)
+                .getResultList();
     }
 }

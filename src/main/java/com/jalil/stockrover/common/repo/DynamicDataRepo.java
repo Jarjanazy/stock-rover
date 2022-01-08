@@ -22,7 +22,7 @@ public class DynamicDataRepo
         String query = format("select (max(e.date)) from %s e where e.company.id= %s", wantedEntity.getName(), company.getId());
 
         try {
-            return Optional.of(entityManager
+            return Optional.ofNullable(entityManager
                     .createQuery(query, LocalDateTime.class)
                     .getSingleResult());
         } catch (NoResultException e)

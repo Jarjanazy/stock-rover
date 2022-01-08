@@ -9,6 +9,7 @@ import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
 import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
 import com.jalil.stockrover.domain.balanceSheet.IBalanceSheetRepo;
 import com.jalil.stockrover.domain.company.Company;
+import com.jalil.stockrover.domain.company.ICompanyRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +39,9 @@ public class BalanceSheetCrawlerServiceFromHtmlPageTest
     private IBalanceSheetRepo balanceSheetRepo;
 
     @Mock
+    private ICompanyRepo companyRepo;
+
+    @Mock
     private DynamicDataRepo dynamicDataRepo;
 
     @Captor
@@ -50,7 +54,7 @@ public class BalanceSheetCrawlerServiceFromHtmlPageTest
         ToEntityConvertor toEntityConvertor = new ToEntityConvertor();
 
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
-        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, filterService, toEntityConvertor, toDataStructureConvertor);
+        this.balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, companyRepo, filterService, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test

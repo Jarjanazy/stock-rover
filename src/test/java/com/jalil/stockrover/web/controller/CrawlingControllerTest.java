@@ -1,5 +1,6 @@
 package com.jalil.stockrover.web.controller;
 
+import com.jalil.stockrover.crawler.balancesheet.BalanceSheetCrawlerService;
 import com.jalil.stockrover.crawler.stockscreener.StockScreenerCrawlerService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -21,6 +22,9 @@ public class CrawlingControllerTest
     @MockBean
     StockScreenerCrawlerService stockScreenerCrawlerService;
 
+    @MockBean
+    BalanceSheetCrawlerService balanceSheetCrawlerService;
+
     @Test
     public void givenCrawlAllCompaniesEndPoint_WhenCalled_ThenReturn200() throws Exception
     {
@@ -28,6 +32,15 @@ public class CrawlingControllerTest
                 .andExpect(status().isOk());
 
         verify(stockScreenerCrawlerService).crawlStockScreener();
+    }
+
+    @Test
+    public void givenCrawlAllBalanceSheetsEndPoint_WhenCalled_ThenReturn200() throws Exception
+    {
+        mockMvc.perform(post("/crawler/all-balance-sheets"))
+                .andExpect(status().isOk());
+
+        verify(balanceSheetCrawlerService).crawlAllBalanceSheets();
     }
 
 }

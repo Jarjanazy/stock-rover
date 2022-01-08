@@ -8,6 +8,7 @@ import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
 import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
 import com.jalil.stockrover.domain.balanceSheet.IBalanceSheetRepo;
 import com.jalil.stockrover.domain.company.Company;
+import com.jalil.stockrover.domain.company.ICompanyRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,14 +16,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import static com.jalil.stockrover.common.util.Utils.getDateFromString;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -36,6 +36,9 @@ public class BalanceSheetCrawlerServiceTest
 
     @Mock
     IBalanceSheetRepo balanceSheetRepo;
+
+    @Mock
+    ICompanyRepo companyRepo;
 
     @Mock
     DynamicDataRepo dynamicDataRepo;
@@ -55,7 +58,7 @@ public class BalanceSheetCrawlerServiceTest
     public void setup()
     {
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
-        balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, filterService, toEntityConvertor, toDataStructureConvertor);
+        balanceSheetCrawlerService = new BalanceSheetCrawlerService(htmlPageFetcher, balanceSheetRepo, companyRepo, filterService, toEntityConvertor, toDataStructureConvertor);
     }
 
     @Test
@@ -79,6 +82,18 @@ public class BalanceSheetCrawlerServiceTest
         List<String> capturedDates = datesArgumentCaptor.getValue();
         assertThat(capturedDates).hasSize(1);
         assertThat(capturedDates.get(0)).isEqualTo("2020-02-05");
+    }
+
+    @Test
+    public void givenAllCompanies_ThenCrawlAllOfThem() throws IOException
+    {
+        Company company1 = Company.builder().companyName("test1").companySymbol("c1").build();
+
+        when(companyRepo.findAll()).thenReturn(singletonList(company1));
+
+        balanceSheetCrawlerService.crawlAllBalanceSheets();
+
+        verify(htmlPageFetcher).getBalanceSheetHtmlPage("c1", "test1");
     }
 
 }

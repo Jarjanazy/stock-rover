@@ -25,8 +25,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BalanceSheetCrawlerServiceTest
@@ -93,7 +92,7 @@ public class BalanceSheetCrawlerServiceTest
 
         balanceSheetCrawlerService.crawlAllBalanceSheets();
 
-        verify(htmlPageFetcher).getBalanceSheetHtmlPage("c1", "test1");
+        verify(htmlPageFetcher, timeout(1000).times(1)).getBalanceSheetHtmlPage("c1", "test1");
     }
 
     @Test
@@ -105,7 +104,7 @@ public class BalanceSheetCrawlerServiceTest
 
         balanceSheetCrawlerService.crawlUnCrawledBalanceSheets();
 
-        verify(htmlPageFetcher).getBalanceSheetHtmlPage("c12", "test14");
+        verify(htmlPageFetcher, timeout(1000).times(1)).getBalanceSheetHtmlPage("c12", "test14");
     }
 
 }

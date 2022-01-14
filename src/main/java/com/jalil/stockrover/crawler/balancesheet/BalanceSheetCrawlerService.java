@@ -19,6 +19,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.StreamSupport;
 
+import static com.jalil.stockrover.crawler.MultiThreadWorker.runAsyncJobInParallel;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -40,21 +42,20 @@ public class BalanceSheetCrawlerService
 
     public void crawlAllBalanceSheets()
     {
-        StreamSupport
+        Runnable runnable = () -> StreamSupport
                 .stream(companyRepo.findAll().spliterator(), true)
                 .forEach(this::crawlBalanceSheet);
+
+        runAsyncJobInParallel(3, runnable);
     }
 
     public void crawlUnCrawledBalanceSheets()
     {
         List<Company> unCrawledCompanies = dynamicDataRepo.findUnCrawledCompanies(BalanceSheet.class);
 
-        ForkJoinPool forkJoinPool = new ForkJoinPool(3);
+        Runnable runnable = () -> unCrawledCompanies.stream().parallel().forEach(this::crawlBalanceSheet);
 
-        CompletableFuture.runAsync(
-                () -> unCrawledCompanies.stream().parallel().forEach(this::crawlBalanceSheet),
-                forkJoinPool
-        );
+        runAsyncJobInParallel(3, runnable);
     }
 
     public void crawlBalanceSheet(Company company)

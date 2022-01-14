@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -47,10 +49,12 @@ public class BalanceSheetCrawlerService
     {
         List<Company> unCrawledCompanies = dynamicDataRepo.findUnCrawledCompanies(BalanceSheet.class);
 
-        unCrawledCompanies
-                .stream()
-                .parallel()
-                .forEach(this::crawlBalanceSheet);
+        ForkJoinPool forkJoinPool = new ForkJoinPool(3);
+
+        CompletableFuture.runAsync(
+                () -> unCrawledCompanies.stream().parallel().forEach(this::crawlBalanceSheet),
+                forkJoinPool
+        );
     }
 
     public void crawlBalanceSheet(Company company)

@@ -1,4 +1,4 @@
-package com.jalil.stockrover.domain.margin.operatingMargin;
+package com.jalil.stockrover.domain.ratio.operatingMargin;
 
 import com.jalil.stockrover.domain.company.Company;
 import lombok.AllArgsConstructor;

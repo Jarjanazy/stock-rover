@@ -1,15 +1,15 @@
-package com.jalil.stockrover.crawler.margins;
+package com.jalil.stockrover.crawler.ratio;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.common.HtmlPageFetcher;
 import com.jalil.stockrover.common.service.convertor.TableToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
-import com.jalil.stockrover.domain.margin.grossmargin.GrossMargin;
-import com.jalil.stockrover.domain.margin.grossmargin.IGrossMarginRepo;
-import com.jalil.stockrover.domain.margin.netmargin.INetMarginRepo;
-import com.jalil.stockrover.domain.margin.netmargin.NetMargin;
-import com.jalil.stockrover.domain.margin.operatingMargin.IOperatingMarginRepo;
-import com.jalil.stockrover.domain.margin.operatingMargin.OperatingMargin;
+import com.jalil.stockrover.domain.ratio.grossmargin.GrossMargin;
+import com.jalil.stockrover.domain.ratio.grossmargin.IGrossMarginRepo;
+import com.jalil.stockrover.domain.ratio.netmargin.INetMarginRepo;
+import com.jalil.stockrover.domain.ratio.netmargin.NetMargin;
+import com.jalil.stockrover.domain.ratio.operatingMargin.IOperatingMarginRepo;
+import com.jalil.stockrover.domain.ratio.operatingMargin.OperatingMargin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,9 +27,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class MarginsCrawlerServiceFromHtmlPageTest
+public class RatiosCrawlerServiceFromHtmlPageTest
 {
-    private MarginsCrawlerService marginsCrawlerService;
+    private RatiosCrawlerService ratiosCrawlerService;
 
     @Mock
     HtmlPageFetcher htmlPageFetcher;
@@ -56,7 +56,7 @@ public class MarginsCrawlerServiceFromHtmlPageTest
     public void setup()
     {
         TableToEntityConvertor tableToEntityConvertor = new TableToEntityConvertor();
-        marginsCrawlerService = new MarginsCrawlerService(grossMarginRepo, netMarginRepo, operatingMarginRepo, htmlPageFetcher, tableToEntityConvertor);
+        ratiosCrawlerService = new RatiosCrawlerService(grossMarginRepo, netMarginRepo, operatingMarginRepo, htmlPageFetcher, tableToEntityConvertor);
     }
 
 
@@ -72,7 +72,7 @@ public class MarginsCrawlerServiceFromHtmlPageTest
 
         Company company = Company.builder().companySymbol("AAPL").companyName("Apple").build();
 
-        marginsCrawlerService.crawlGrossMargin(company);
+        ratiosCrawlerService.crawlGrossMargin(company);
 
         List<GrossMargin> captured = grossMarginCaptor.getValue();
 
@@ -101,7 +101,7 @@ public class MarginsCrawlerServiceFromHtmlPageTest
 
         Company company = Company.builder().companyName("Apple").companySymbol("AAPL").build();
 
-        marginsCrawlerService.crawlNetMargin(company);
+        ratiosCrawlerService.crawlNetMargin(company);
 
         List<NetMargin> captured = netMarginCaptor.getValue();
 
@@ -131,7 +131,7 @@ public class MarginsCrawlerServiceFromHtmlPageTest
 
         Company company = Company.builder().companyName("Apple").companySymbol("AAPL").build();
 
-        marginsCrawlerService.crawlOperatingMargin(company);
+        ratiosCrawlerService.crawlOperatingMargin(company);
 
         List<OperatingMargin> captured = operatingMarginCaptor.getValue();
 

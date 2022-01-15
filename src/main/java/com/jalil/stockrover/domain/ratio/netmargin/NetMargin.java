@@ -1,4 +1,4 @@
-package com.jalil.stockrover.domain.margin.grossmargin;
+package com.jalil.stockrover.domain.ratio.netmargin;
 
 import com.jalil.stockrover.domain.company.Company;
 import lombok.AllArgsConstructor;
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table(name="gross_margin")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Table(name = "net_margin")
 @Entity
+@Builder
 @Getter
-public class GrossMargin
+@NoArgsConstructor
+@AllArgsConstructor
+public class NetMargin
 {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,13 +27,14 @@ public class GrossMargin
     @Column(name="ttm_revenue")
     private double ttmRevenue;
 
-    @Column(name="ttm_gross_profit")
-    private double ttmGrossProfit;
+    @Column(name="ttm_net_income")
+    private double ttmNetIncome;
 
-    @Column(name="gross_margin_percentage")
-    private double grossMarginPercentage;
+    @Column(name="net_margin_percentage")
+    private double netMarginPercentage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
 }

@@ -1,15 +1,15 @@
-package com.jalil.stockrover.crawler.margins;
+package com.jalil.stockrover.crawler.ratio;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.common.HtmlPageFetcher;
 import com.jalil.stockrover.common.service.convertor.TableToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
-import com.jalil.stockrover.domain.margin.grossmargin.GrossMargin;
-import com.jalil.stockrover.domain.margin.grossmargin.IGrossMarginRepo;
-import com.jalil.stockrover.domain.margin.netmargin.INetMarginRepo;
-import com.jalil.stockrover.domain.margin.netmargin.NetMargin;
-import com.jalil.stockrover.domain.margin.operatingMargin.IOperatingMarginRepo;
-import com.jalil.stockrover.domain.margin.operatingMargin.OperatingMargin;
+import com.jalil.stockrover.domain.ratio.grossmargin.GrossMargin;
+import com.jalil.stockrover.domain.ratio.grossmargin.IGrossMarginRepo;
+import com.jalil.stockrover.domain.ratio.netmargin.INetMarginRepo;
+import com.jalil.stockrover.domain.ratio.netmargin.NetMargin;
+import com.jalil.stockrover.domain.ratio.operatingMargin.IOperatingMarginRepo;
+import com.jalil.stockrover.domain.ratio.operatingMargin.OperatingMargin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MarginsCrawlerService
+public class RatiosCrawlerService
 {
     private final IGrossMarginRepo grossMarginRepo;
 
@@ -50,7 +50,6 @@ public class MarginsCrawlerService
 
         netMarginRepo.saveAll(netMargins);
     }
-
 
     public void crawlOperatingMargin(Company company) throws IOException
     {

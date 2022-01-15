@@ -3,7 +3,7 @@ package com.jalil.stockrover;
 import com.jalil.stockrover.crawler.balancesheet.BalanceSheetCrawlerService;
 import com.jalil.stockrover.crawler.cashflowstatement.CashFlowStatementCrawlerService;
 import com.jalil.stockrover.crawler.incomeStatement.IncomeStatementCrawlerService;
-import com.jalil.stockrover.crawler.margins.MarginsCrawlerService;
+import com.jalil.stockrover.crawler.ratio.RatiosCrawlerService;
 import com.jalil.stockrover.crawler.stockscreener.StockScreenerCrawlerService;
 import com.jalil.stockrover.domain.company.Company;
 import org.junit.jupiter.api.Disabled;
@@ -17,7 +17,7 @@ import java.io.IOException;
 public class CrawlerServiceLiveTest
 {
     @Autowired
-    private MarginsCrawlerService marginsCrawlerService;
+    private RatiosCrawlerService ratiosCrawlerService;
 
     @Autowired
     private IncomeStatementCrawlerService incomeStatementCrawlerService;
@@ -35,7 +35,7 @@ public class CrawlerServiceLiveTest
     public void givenTheAppleStockPageOnMacroTrends_WhenGrossMarginIsRequested_ThenGetIt() throws IOException
     {
         Company company = Company.builder().companyName("microsoft").companySymbol("MSFT").build();
-        marginsCrawlerService.crawlGrossMargin(company);
+        ratiosCrawlerService.crawlGrossMargin(company);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class CrawlerServiceLiveTest
     {
         Company company = Company.builder().companyName("microsoft").companySymbol("MSFT").build();
 
-        marginsCrawlerService.crawlNetMargin(company);
+        ratiosCrawlerService.crawlNetMargin(company);
     }
 
     @Test

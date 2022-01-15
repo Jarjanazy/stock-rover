@@ -26,6 +26,11 @@ public class UrlFactory
         return format("%s/%s/%s/operating-margin", baseUrl, stockSymbol, companyName);
     }
 
+    public static String getROAUrl(String stockSymbol, String companyName)
+    {
+        return format("%s/%s/%s/roa", baseUrl, stockSymbol, companyName);
+    }
+
     public static String getEBITDAMarginUrl(String stockSymbol, String companyName)
     {
         return format("%s/%s/%s/ebitda-margin", baseUrl, stockSymbol, companyName);

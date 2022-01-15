@@ -10,6 +10,8 @@ import com.jalil.stockrover.domain.ratio.netmargin.INetMarginRepo;
 import com.jalil.stockrover.domain.ratio.netmargin.NetMargin;
 import com.jalil.stockrover.domain.ratio.operatingMargin.IOperatingMarginRepo;
 import com.jalil.stockrover.domain.ratio.operatingMargin.OperatingMargin;
+import com.jalil.stockrover.domain.ratio.roa.IROARepo;
+import com.jalil.stockrover.domain.ratio.roa.ROA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +43,9 @@ public class RatiosCrawlerServiceFromHtmlPageTest
     INetMarginRepo netMarginRepo;
 
     @Mock
+    IROARepo roaRepo;
+
+    @Mock
     IOperatingMarginRepo operatingMarginRepo;
 
     @Captor
@@ -52,11 +57,14 @@ public class RatiosCrawlerServiceFromHtmlPageTest
     @Captor
     ArgumentCaptor<List<OperatingMargin>> operatingMarginCaptor;
 
+    @Captor
+    ArgumentCaptor<List<ROA>> roaCaptor;
+
     @BeforeEach
     public void setup()
     {
         TableToEntityConvertor tableToEntityConvertor = new TableToEntityConvertor();
-        ratiosCrawlerService = new RatiosCrawlerService(grossMarginRepo, netMarginRepo, operatingMarginRepo, htmlPageFetcher, tableToEntityConvertor);
+        ratiosCrawlerService = new RatiosCrawlerService(grossMarginRepo, netMarginRepo, operatingMarginRepo, roaRepo, htmlPageFetcher, tableToEntityConvertor);
     }
 
 
@@ -146,6 +154,36 @@ public class RatiosCrawlerServiceFromHtmlPageTest
         assertThat(date.getDayOfMonth()).isEqualTo(30);
         assertThat(date.getMonthValue()).isEqualTo(9);
         assertThat(date.getYear()).isEqualTo(2021);
+    }
+
+    @Test
+    public void givenAnROAPage_ThenConvertItToROA() throws IOException
+    {
+        URL input = getClass().getResource("/ROATestPage.html").openConnection().getURL();
+        HtmlPage htmlPage = createWebClient().getPage(input);
+
+        when(htmlPageFetcher.getROAHtmlPage("AAPL", "Apple")).thenReturn(htmlPage);
+
+        when(roaRepo.saveAll(roaCaptor.capture())).thenReturn(null);
+
+        Company company = Company.builder().companyName("Apple").companySymbol("AAPL").build();
+
+        ratiosCrawlerService.crawlRoa(company);
+
+        List<ROA> captured = roaCaptor.getValue();
+
+        assertThat(captured).hasSize(2);
+
+        assertThat(captured.get(0).getTtmNetIncome()).isEqualTo(67.88);
+        assertThat(captured.get(0).getTotalAssets()).isEqualTo(335.42);
+        assertThat(captured.get(0).getReturnOnAssetsPercentage()).isEqualTo(21.18);
+        assertThat(captured.get(0).getCompany()).isEqualTo(company);
+
+        LocalDateTime date = captured.get(0).getDate();
+        assertThat(date.getDayOfMonth()).isEqualTo(30);
+        assertThat(date.getMonthValue()).isEqualTo(9);
+        assertThat(date.getYear()).isEqualTo(2021);
+
     }
 
 }

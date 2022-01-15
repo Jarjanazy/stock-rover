@@ -52,4 +52,10 @@ public class HtmlPageFetcher
         return createWebClientForTableRetrieval()
                 .getPage(getOperatingMarginUrl(stockSymbol, companyName));
     }
+
+    public HtmlPage getROAHtmlPage(String stockSymbol, String companyName) throws IOException
+    {
+        return createWebClientForTableRetrieval()
+                .getPage(getROAUrl(stockSymbol, companyName));
+    }
 }

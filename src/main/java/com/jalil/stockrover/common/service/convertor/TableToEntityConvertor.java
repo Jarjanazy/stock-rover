@@ -8,6 +8,7 @@ import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.ratio.grossmargin.GrossMargin;
 import com.jalil.stockrover.domain.ratio.netmargin.NetMargin;
 import com.jalil.stockrover.domain.ratio.operatingMargin.OperatingMargin;
+import com.jalil.stockrover.domain.ratio.roa.ROA;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +41,42 @@ public class TableToEntityConvertor
         DomNodeList<HtmlElement> rows = getRowsOfFirstTable(page);
 
         return htmlTableToOperatingMargins(rows, company);
+    }
+
+
+    public List<ROA> pageToROA(HtmlPage page, Company company)
+    {
+        DomNodeList<HtmlElement> rows = getRowsOfFirstTable(page);
+
+        return htmlTableToROAs(rows, company);
+    }
+
+    private List<ROA> htmlTableToROAs(DomNodeList<HtmlElement> rows, Company company)
+    {
+        return rows
+                .stream()
+                .map(row -> row.getElementsByTagName("td"))
+                .map(row -> rowToROA(row, company))
+                .collect(Collectors.toList());
+    }
+
+    private ROA rowToROA(DomNodeList<HtmlElement> row, Company company)
+    {
+        LocalDate dateTime = getDateFromRow(row);
+
+        double ttmNetIncome = extractDoubleFromRowString(getCellValueFromRowUsingIndex(row, 1));
+        double totalAssets = extractDoubleFromRowString(getCellValueFromRowUsingIndex(row, 2));
+        double returnOnAssets = extractPercentageFromRowString(getCellValueFromRowUsingIndex(row, 3));
+
+        return ROA
+                .builder()
+                .date(dateTime.atStartOfDay())
+                .ttmNetIncome(ttmNetIncome)
+                .totalAssets(totalAssets)
+                .returnOnAssetsPercentage(returnOnAssets)
+                .company(company)
+                .build();
+
     }
 
     private DomNodeList<HtmlElement> getRowsOfFirstTable(HtmlPage page)

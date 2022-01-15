@@ -10,6 +10,8 @@ import com.jalil.stockrover.domain.ratio.netmargin.INetMarginRepo;
 import com.jalil.stockrover.domain.ratio.netmargin.NetMargin;
 import com.jalil.stockrover.domain.ratio.operatingMargin.IOperatingMarginRepo;
 import com.jalil.stockrover.domain.ratio.operatingMargin.OperatingMargin;
+import com.jalil.stockrover.domain.ratio.roa.IROARepo;
+import com.jalil.stockrover.domain.ratio.roa.ROA;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class RatiosCrawlerService
     private final INetMarginRepo netMarginRepo;
 
     private final IOperatingMarginRepo operatingMarginRepo;
+
+    private final IROARepo roaRepo;
 
     private final HtmlPageFetcher htmlPageFetcher;
 
@@ -58,5 +62,14 @@ public class RatiosCrawlerService
         List<OperatingMargin> operatingMargins = tableToEntityConvertor.pageToOperatingMargins(page, company);
 
         operatingMarginRepo.saveAll(operatingMargins);
+    }
+
+    public void crawlRoa(Company company) throws IOException
+    {
+        HtmlPage page = htmlPageFetcher.getROAHtmlPage(company.getCompanySymbol(), company.getCompanyName());
+
+        List<ROA> roas = tableToEntityConvertor.pageToROA(page, company);
+
+        roaRepo.saveAll(roas);
     }
 }

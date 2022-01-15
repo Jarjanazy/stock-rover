@@ -1,4 +1,4 @@
-package com.jalil.stockrover.domain.grossmargin;
+package com.jalil.stockrover.domain.margin.operatingMargin;
 
 import com.jalil.stockrover.domain.company.Company;
 import lombok.AllArgsConstructor;
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table(name="gross_margin")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
+@Table(name = "operating_margin")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
-public class GrossMargin
+public class OperatingMargin
 {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,11 +27,11 @@ public class GrossMargin
     @Column(name="ttm_revenue")
     private double ttmRevenue;
 
-    @Column(name="ttm_gross_profit")
-    private double ttmGrossProfit;
+    @Column(name="ttm_operating_income")
+    private double ttmOperatingIncome;
 
-    @Column(name="gross_margin_percentage")
-    private double grossMarginPercentage;
+    @Column(name="operating_margin_percentage")
+    private double operatingMarginPercentage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")

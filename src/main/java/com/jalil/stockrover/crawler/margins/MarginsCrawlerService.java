@@ -4,10 +4,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.common.HtmlPageFetcher;
 import com.jalil.stockrover.common.service.convertor.TableToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
-import com.jalil.stockrover.domain.grossmargin.GrossMargin;
-import com.jalil.stockrover.domain.grossmargin.IGrossMarginRepo;
-import com.jalil.stockrover.domain.netmargin.INetMarginRepo;
-import com.jalil.stockrover.domain.netmargin.NetMargin;
+import com.jalil.stockrover.domain.margin.grossmargin.GrossMargin;
+import com.jalil.stockrover.domain.margin.grossmargin.IGrossMarginRepo;
+import com.jalil.stockrover.domain.margin.netmargin.INetMarginRepo;
+import com.jalil.stockrover.domain.margin.netmargin.NetMargin;
+import com.jalil.stockrover.domain.margin.operatingMargin.IOperatingMarginRepo;
+import com.jalil.stockrover.domain.margin.operatingMargin.OperatingMargin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class MarginsCrawlerService
     private final IGrossMarginRepo grossMarginRepo;
 
     private final INetMarginRepo netMarginRepo;
+
+    private final IOperatingMarginRepo operatingMarginRepo;
 
     private final HtmlPageFetcher htmlPageFetcher;
 
@@ -47,4 +51,13 @@ public class MarginsCrawlerService
         netMarginRepo.saveAll(netMargins);
     }
 
+
+    public void crawlOperatingMargin(Company company) throws IOException
+    {
+        HtmlPage page = htmlPageFetcher.getOperatingMarginsHtmlPage(company.getCompanySymbol(), company.getCompanyName());
+
+        List<OperatingMargin> operatingMargins = tableToEntityConvertor.pageToOperatingMargins(page, company);
+
+        operatingMarginRepo.saveAll(operatingMargins);
+    }
 }

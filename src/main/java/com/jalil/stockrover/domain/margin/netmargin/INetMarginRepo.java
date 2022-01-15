@@ -1,4 +1,4 @@
-package com.jalil.stockrover.domain.netmargin;
+package com.jalil.stockrover.domain.margin.netmargin;
 
 import org.springframework.data.repository.CrudRepository;
 

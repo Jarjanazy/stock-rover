@@ -47,4 +47,9 @@ public class HtmlPageFetcher
         return createWebClientForTableRetrieval().getPage(getStocksScreenerUrl());
     }
 
+    public HtmlPage getOperatingMarginsHtmlPage(String stockSymbol, String companyName) throws IOException
+    {
+        return createWebClientForTableRetrieval()
+                .getPage(getOperatingMarginUrl(stockSymbol, companyName));
+    }
 }

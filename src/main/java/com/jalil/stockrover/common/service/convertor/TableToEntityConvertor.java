@@ -5,8 +5,9 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.domain.company.Company;
-import com.jalil.stockrover.domain.grossmargin.GrossMargin;
-import com.jalil.stockrover.domain.netmargin.NetMargin;
+import com.jalil.stockrover.domain.margin.grossmargin.GrossMargin;
+import com.jalil.stockrover.domain.margin.netmargin.NetMargin;
+import com.jalil.stockrover.domain.margin.operatingMargin.OperatingMargin;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,20 +22,31 @@ public class TableToEntityConvertor
 
     public List<GrossMargin> pageToGrossMargins(HtmlPage page, Company company)
     {
-        DomElement domElement = getFirstTableWithGivenId(page, "style-1");
-
-        DomNodeList<HtmlElement> rows = domElement.getElementsByTagName("tr");
+        DomNodeList<HtmlElement> rows = getRowsOfFirstTable(page);
 
         return htmlTableRowsToGrossMargins(rows, company);
     }
 
     public List<NetMargin> pageToNetMargin(HtmlPage page, Company company)
     {
-        DomElement domElement = getFirstTableWithGivenId(page, "style-1");
-
-        DomNodeList<HtmlElement> rows = domElement.getElementsByTagName("tr");
+        DomNodeList<HtmlElement> rows = getRowsOfFirstTable(page);
 
         return htmlTableRowsToNetMargins(rows, company);
+    }
+
+
+    public List<OperatingMargin> pageToOperatingMargins(HtmlPage page, Company company)
+    {
+        DomNodeList<HtmlElement> rows = getRowsOfFirstTable(page);
+
+        return htmlTableToOperatingMargins(rows, company);
+    }
+
+    private DomNodeList<HtmlElement> getRowsOfFirstTable(HtmlPage page)
+    {
+        DomElement domElement = getFirstTableWithGivenId(page, "style-1");
+
+        return domElement.getElementsByTagName("tr");
     }
 
     private DomElement getFirstTableWithGivenId(HtmlPage page, String id)
@@ -63,6 +75,33 @@ public class TableToEntityConvertor
                 .collect(Collectors.toList());
     }
 
+    private List<OperatingMargin> htmlTableToOperatingMargins(DomNodeList<HtmlElement> rows, Company company)
+    {
+        return rows
+                .stream()
+                .map(row -> row.getElementsByTagName("td"))
+                .map(row -> rowToOperatingMargin(row, company))
+                .collect(Collectors.toList());
+
+    }
+
+    private OperatingMargin rowToOperatingMargin(DomNodeList<HtmlElement> row, Company company)
+    {
+        LocalDate dateTime = getDateFromRow(row);
+
+        double ttmRevenue = extractDoubleFromRowString(getCellValueFromRowUsingIndex(row, 1));
+        double ttmOperatingIncome = extractDoubleFromRowString(getCellValueFromRowUsingIndex(row, 2));
+        double operatingMargin = extractPercentageFromRowString(getCellValueFromRowUsingIndex(row, 3));
+
+        return OperatingMargin
+                .builder()
+                .date(dateTime.atStartOfDay())
+                .ttmRevenue(ttmRevenue)
+                .ttmOperatingIncome(ttmOperatingIncome)
+                .operatingMarginPercentage(operatingMargin)
+                .company(company)
+                .build();
+    }
 
     private GrossMargin rowToGrossMargin(DomNodeList<HtmlElement> row, Company company)
     {

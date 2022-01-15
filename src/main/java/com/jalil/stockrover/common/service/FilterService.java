@@ -2,7 +2,7 @@ package com.jalil.stockrover.common.service;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.jalil.stockrover.common.repo.DynamicDataRepo;
-import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.common.service.convertor.ToDataStructureConvertor;
 import com.jalil.stockrover.domain.company.Company;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

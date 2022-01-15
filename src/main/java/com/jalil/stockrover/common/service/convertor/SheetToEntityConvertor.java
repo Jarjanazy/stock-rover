@@ -1,26 +1,21 @@
-package com.jalil.stockrover.crawler.convertor;
+package com.jalil.stockrover.common.service.convertor;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
 import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import static com.jalil.stockrover.common.util.Utils.getDateFromString;
 import static java.lang.Double.parseDouble;
 
+// a sheet is a table that has dates as columns and data as rows (long-term-debt, cash-on-hand, etc...)
 @Slf4j
 @Service
-public class ToEntityConvertor
+public class SheetToEntityConvertor
 {
     public List<Company> mapToCompanies(List<LinkedTreeMap<String, String>> dataList)
     {

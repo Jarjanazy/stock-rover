@@ -1,4 +1,4 @@
-package com.jalil.stockrover.crawler;
+package com.jalil.stockrover.common;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;

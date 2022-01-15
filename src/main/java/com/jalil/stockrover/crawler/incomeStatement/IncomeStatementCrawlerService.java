@@ -3,10 +3,9 @@ package com.jalil.stockrover.crawler.incomeStatement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.gson.internal.LinkedTreeMap;
 import com.jalil.stockrover.common.service.FilterService;
-import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
-import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
-import com.jalil.stockrover.domain.balanceSheet.BalanceSheet;
+import com.jalil.stockrover.common.HtmlPageFetcher;
+import com.jalil.stockrover.common.service.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.common.service.convertor.SheetToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.incomeStatement.IIncomeStatementRepo;
 import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
@@ -27,7 +26,7 @@ public class IncomeStatementCrawlerService
 
     private final FilterService filterService;
 
-    private final ToEntityConvertor toEntityConvertor;
+    private final SheetToEntityConvertor sheetToEntityConvertor;
 
     private final ToDataStructureConvertor toDataStructureConvertor;
 
@@ -40,7 +39,7 @@ public class IncomeStatementCrawlerService
 
         List<String> filteredDates = filterService.filterDatesBiggerThanOnesInDB(data, company, IncomeStatement.class);
 
-        List<IncomeStatement> incomeStatements = toEntityConvertor.mapToIncomeStatements(data, filteredDates, company);
+        List<IncomeStatement> incomeStatements = sheetToEntityConvertor.mapToIncomeStatements(data, filteredDates, company);
 
         iIncomeStatementRepo.saveAll(incomeStatements);
     }

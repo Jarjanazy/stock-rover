@@ -3,9 +3,9 @@ package com.jalil.stockrover.crawler.cashflowstatement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.common.service.FilterService;
-import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
-import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
+import com.jalil.stockrover.common.HtmlPageFetcher;
+import com.jalil.stockrover.common.service.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.common.service.convertor.SheetToEntityConvertor;
 import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
 import com.jalil.stockrover.domain.cashflowstatement.ICashFlowStatementRepo;
 import com.jalil.stockrover.domain.company.Company;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static com.jalil.stockrover.crawler.WebClientFactory.createWebClientForTableRetrieval;
+import static com.jalil.stockrover.common.WebClientFactory.createWebClientForTableRetrieval;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,10 +47,10 @@ public class CashFlowStatementCrawlerServiceFromHtmlPageTest
     public void setup()
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
-        ToEntityConvertor toEntityConvertor = new ToEntityConvertor();
+        SheetToEntityConvertor sheetToEntityConvertor = new SheetToEntityConvertor();
 
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
-        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, filterService, toEntityConvertor, toDataStructureConvertor);
+        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, filterService, sheetToEntityConvertor, toDataStructureConvertor);
     }
 
 

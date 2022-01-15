@@ -2,9 +2,8 @@ package com.jalil.stockrover.crawler.stockscreener;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.gson.internal.LinkedTreeMap;
-import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
-import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
+import com.jalil.stockrover.common.service.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.common.service.convertor.SheetToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.company.ICompanyRepo;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static com.jalil.stockrover.crawler.WebClientFactory.createWebClient;
+import static com.jalil.stockrover.common.WebClientFactory.createWebClient;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +20,7 @@ public class StockScreenerCrawlerService
 {
     private final ICompanyRepo companyRepo;
 
-    private final ToEntityConvertor toEntityConvertor;
+    private final SheetToEntityConvertor sheetToEntityConvertor;
 
     private final ToDataStructureConvertor toDataStructureConvertor;
 
@@ -33,7 +32,7 @@ public class StockScreenerCrawlerService
 
         List<LinkedTreeMap<String, String>> data = toDataStructureConvertor.getDataFromTable(htmlPage);
 
-        List<Company> companies = toEntityConvertor.mapToCompanies(data);
+        List<Company> companies = sheetToEntityConvertor.mapToCompanies(data);
 
         companyRepo.saveAll(companies);
     }

@@ -1,9 +1,8 @@
 package com.jalil.stockrover.crawler.stockscreener;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
-import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
+import com.jalil.stockrover.common.service.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.common.service.convertor.SheetToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.company.ICompanyRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +17,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static com.jalil.stockrover.crawler.WebClientFactory.createWebClient;
+import static com.jalil.stockrover.common.WebClientFactory.createWebClient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class StockScreenerCrawlerServiceFromHtmlPageTest
@@ -38,8 +36,8 @@ public class StockScreenerCrawlerServiceFromHtmlPageTest
     public void setup()
     {
         ToDataStructureConvertor toDataStructureConvertor = new ToDataStructureConvertor();
-        ToEntityConvertor toEntityConvertor = new ToEntityConvertor();
-        stockScreenerCrawlerService = new StockScreenerCrawlerService(companyRepo, toEntityConvertor, toDataStructureConvertor);
+        SheetToEntityConvertor sheetToEntityConvertor = new SheetToEntityConvertor();
+        stockScreenerCrawlerService = new StockScreenerCrawlerService(companyRepo, sheetToEntityConvertor, toDataStructureConvertor);
     }
 
     @Test

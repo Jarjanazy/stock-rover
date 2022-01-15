@@ -1,14 +1,13 @@
-package com.jalil.stockrover.crawler;
+package com.jalil.stockrover.common;
 
-import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static com.jalil.stockrover.crawler.UrlFactory.*;
-import static com.jalil.stockrover.crawler.WebClientFactory.createWebClient;
-import static com.jalil.stockrover.crawler.WebClientFactory.createWebClientForTableRetrieval;
+import static com.jalil.stockrover.common.UrlFactory.*;
+import static com.jalil.stockrover.common.WebClientFactory.createWebClient;
+import static com.jalil.stockrover.common.WebClientFactory.createWebClientForTableRetrieval;
 
 @Service
 public class HtmlPageFetcher

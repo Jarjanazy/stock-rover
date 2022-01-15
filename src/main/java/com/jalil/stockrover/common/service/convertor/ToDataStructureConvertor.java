@@ -1,4 +1,4 @@
-package com.jalil.stockrover.crawler.convertor;
+package com.jalil.stockrover.common.service.convertor;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.gson.Gson;

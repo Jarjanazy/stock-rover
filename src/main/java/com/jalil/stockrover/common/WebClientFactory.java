@@ -1,4 +1,4 @@
-package com.jalil.stockrover.crawler;
+package com.jalil.stockrover.common;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.CookieManager;

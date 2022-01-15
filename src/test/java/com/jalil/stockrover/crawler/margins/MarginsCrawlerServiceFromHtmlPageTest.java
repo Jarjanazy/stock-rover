@@ -1,7 +1,8 @@
 package com.jalil.stockrover.crawler.margins;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.jalil.stockrover.crawler.HtmlPageFetcher;
+import com.jalil.stockrover.common.HtmlPageFetcher;
+import com.jalil.stockrover.common.service.convertor.TableToEntityConvertor;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.grossmargin.GrossMargin;
 import com.jalil.stockrover.domain.grossmargin.IGrossMarginRepo;
@@ -19,7 +20,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.jalil.stockrover.crawler.WebClientFactory.createWebClient;
+import static com.jalil.stockrover.common.WebClientFactory.createWebClient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -46,7 +47,8 @@ public class MarginsCrawlerServiceFromHtmlPageTest
     @BeforeEach
     public void setup()
     {
-        marginsCrawlerService = new MarginsCrawlerService(grossMarginRepo, netMarginRepo, htmlPageFetcher);
+        TableToEntityConvertor tableToEntityConvertor = new TableToEntityConvertor();
+        marginsCrawlerService = new MarginsCrawlerService(grossMarginRepo, netMarginRepo, htmlPageFetcher, tableToEntityConvertor);
     }
 
 

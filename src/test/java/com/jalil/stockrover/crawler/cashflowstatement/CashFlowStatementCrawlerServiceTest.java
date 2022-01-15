@@ -2,9 +2,9 @@ package com.jalil.stockrover.crawler.cashflowstatement;
 
 import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.common.service.FilterService;
-import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
-import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
+import com.jalil.stockrover.common.HtmlPageFetcher;
+import com.jalil.stockrover.common.service.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.common.service.convertor.SheetToEntityConvertor;
 import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
 import com.jalil.stockrover.domain.cashflowstatement.ICashFlowStatementRepo;
 import com.jalil.stockrover.domain.company.Company;
@@ -45,7 +45,7 @@ public class CashFlowStatementCrawlerServiceTest
     ToDataStructureConvertor toDataStructureConvertor;
 
     @Mock
-    ToEntityConvertor toEntityConvertor;
+    SheetToEntityConvertor sheetToEntityConvertor;
 
     @Captor
     ArgumentCaptor<List<String>> datesArgumentCaptor;
@@ -56,7 +56,7 @@ public class CashFlowStatementCrawlerServiceTest
     public void setup()
     {
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
-        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, filterService, toEntityConvertor, toDataStructureConvertor);
+        cashFlowStatementCrawlerService = new CashFlowStatementCrawlerService(htmlPageFetcher, cashFlowStatementRepo, filterService, sheetToEntityConvertor, toDataStructureConvertor);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class CashFlowStatementCrawlerServiceTest
 
         cashFlowStatementCrawlerService.crawlCashFlowStatement(company);
 
-        verify(toEntityConvertor).mapToCashFlowStatements(any(), datesArgumentCaptor.capture(), any());
+        verify(sheetToEntityConvertor).mapToCashFlowStatements(any(), datesArgumentCaptor.capture(), any());
 
         List<String> capturedDates = datesArgumentCaptor.getValue();
         assertThat(capturedDates).hasSize(1);

@@ -2,13 +2,10 @@ package com.jalil.stockrover.crawler.incomestatement;
 
 import com.jalil.stockrover.common.repo.DynamicDataRepo;
 import com.jalil.stockrover.common.service.FilterService;
-import com.jalil.stockrover.crawler.HtmlPageFetcher;
-import com.jalil.stockrover.crawler.cashflowstatement.CashFlowStatementCrawlerService;
-import com.jalil.stockrover.crawler.convertor.ToDataStructureConvertor;
-import com.jalil.stockrover.crawler.convertor.ToEntityConvertor;
+import com.jalil.stockrover.common.HtmlPageFetcher;
+import com.jalil.stockrover.common.service.convertor.ToDataStructureConvertor;
+import com.jalil.stockrover.common.service.convertor.SheetToEntityConvertor;
 import com.jalil.stockrover.crawler.incomeStatement.IncomeStatementCrawlerService;
-import com.jalil.stockrover.domain.cashflowstatement.CashFlowStatement;
-import com.jalil.stockrover.domain.cashflowstatement.ICashFlowStatementRepo;
 import com.jalil.stockrover.domain.company.Company;
 import com.jalil.stockrover.domain.incomeStatement.IIncomeStatementRepo;
 import com.jalil.stockrover.domain.incomeStatement.IncomeStatement;
@@ -48,7 +45,7 @@ public class IncomeStatementCrawlerServiceTest
     ToDataStructureConvertor toDataStructureConvertor;
 
     @Mock
-    ToEntityConvertor toEntityConvertor;
+    SheetToEntityConvertor sheetToEntityConvertor;
 
     @Captor
     ArgumentCaptor<List<String>> datesArgumentCaptor;
@@ -59,7 +56,7 @@ public class IncomeStatementCrawlerServiceTest
     public void setup()
     {
         FilterService filterService = new FilterService(dynamicDataRepo, toDataStructureConvertor);
-        incomeStatementCrawlerService = new IncomeStatementCrawlerService(htmlPageFetcher, iIncomeStatementRepo, filterService, toEntityConvertor, toDataStructureConvertor);
+        incomeStatementCrawlerService = new IncomeStatementCrawlerService(htmlPageFetcher, iIncomeStatementRepo, filterService, sheetToEntityConvertor, toDataStructureConvertor);
     }
 
     @Test
@@ -78,7 +75,7 @@ public class IncomeStatementCrawlerServiceTest
 
         incomeStatementCrawlerService.crawlIncomeStatement(company);
 
-        verify(toEntityConvertor).mapToIncomeStatements(any(), datesArgumentCaptor.capture(), any());
+        verify(sheetToEntityConvertor).mapToIncomeStatements(any(), datesArgumentCaptor.capture(), any());
 
         List<String> capturedDates = datesArgumentCaptor.getValue();
         assertThat(capturedDates).hasSize(1);

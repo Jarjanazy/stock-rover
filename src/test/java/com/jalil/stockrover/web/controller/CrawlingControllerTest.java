@@ -1,14 +1,20 @@
 package com.jalil.stockrover.web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jalil.stockrover.crawler.balancesheet.BalanceSheetCrawlerService;
 import com.jalil.stockrover.crawler.stockscreener.StockScreenerCrawlerService;
+import com.jalil.stockrover.web.service.CrawlingService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,11 +25,17 @@ public class CrawlingControllerTest
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     StockScreenerCrawlerService stockScreenerCrawlerService;
 
     @MockBean
     BalanceSheetCrawlerService balanceSheetCrawlerService;
+
+    @MockBean
+    CrawlingService crawlingService;
 
     @Test
     public void givenCrawlAllCompaniesEndPoint_WhenCalled_ThenReturn200() throws Exception
@@ -51,6 +63,19 @@ public class CrawlingControllerTest
 
         verify(balanceSheetCrawlerService).crawlUnCrawledBalanceSheets();
 
+    }
+
+    @Test
+    public void givenAListOf3Companies_WhenCrawlAllDataEndpointIsCalled_ThenCrawlThem() throws Exception
+    {
+        List<String> companies = asList("AAPL", "MSFT", "GOOGLE");
+
+        mockMvc.perform(post("/crawler/companies/all-data")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(companies)))
+        .andExpect(status().isOk());
+
+        verify(crawlingService).crawlGivenCompanies(companies);
     }
 
 }

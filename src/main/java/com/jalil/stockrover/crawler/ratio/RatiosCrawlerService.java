@@ -36,6 +36,14 @@ public class RatiosCrawlerService
 
     private final TableToEntityConvertor tableToEntityConvertor;
 
+    public void crawlAllMarginData(Company company) throws IOException
+    {
+        crawlRoa(company);
+        crawlOperatingMargin(company);
+        crawlGrossMargin(company);
+        crawlNetMargin(company);
+    }
+
     public void crawlGrossMargin(Company company) throws IOException
     {
         HtmlPage page = htmlPageFetcher

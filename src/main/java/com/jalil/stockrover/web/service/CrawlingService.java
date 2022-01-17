@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -30,7 +29,7 @@ public class CrawlingService
 
     public void crawlGivenCompanies(List<String> companiesTickerSymbols)
     {
-        List<Company> companies = companyRepo.findAllByCompanySymbol(companiesTickerSymbols);
+        List<Company> companies = companyRepo.findAllByCompanySymbolIn(companiesTickerSymbols);
 
         companies.forEach(this::crawlGivenCompany);
     }

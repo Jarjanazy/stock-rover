@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface ICompanyRepo extends CrudRepository<Company, Integer>
 {
-    List<Company> findAllByCompanySymbol(List<String> companiesSymbols);
+    List<Company> findAllByCompanySymbolIn(List<String> companiesSymbols);
 }

@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -53,7 +52,7 @@ public class CrawlingServiceTest
 
         Company company = Company.builder().companySymbol("AAPL").build();
 
-        when(companyRepo.findAllByCompanySymbol(companiesSymbol))
+        when(companyRepo.findAllByCompanySymbolIn(companiesSymbol))
                 .thenReturn(singletonList(company));
 
         crawlingService.crawlGivenCompanies(companiesSymbol);
